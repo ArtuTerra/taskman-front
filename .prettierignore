@@ -1,0 +1,17 @@
+node_modules
+build
+dist
+.nuxt
+.output
+
+# ignore md files
+*.md
+
+# lock file
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+
+# ignore deployment files
+.github

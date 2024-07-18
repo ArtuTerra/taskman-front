@@ -1,0 +1,129 @@
+@import "_colors.scss";
+
+$title-font-weights: (
+	regular: 400,
+	medium: 500,
+	semi-bold: 600,
+);
+
+$title-styles: (
+	h1: (
+		font-size: 64px,
+		line-height: 100px,
+	),
+	h2: (
+		font-size: 56px,
+		line-height: 140%,
+	),
+	h3: (
+		font-size: 48px,
+		line-height: 140%,
+	),
+	h4: (
+		font-size: 40px,
+		line-height: 140%,
+	),
+	h5: (
+		font-size: 36px,
+		line-height: 140%,
+	),
+	h6: (
+		font-size: 32px,
+		line-height: 140%,
+	),
+	h7: (
+		font-size: 24px,
+		line-height: 140%,
+	),
+);
+.title {
+	@each $style, $properties in $title-styles {
+		&-#{$style} {
+			font-feature-settings:
+				"clig" off,
+				"liga" off;
+			font-style: normal;
+			color: currentColor;
+
+			&-medium {
+				font-weight: map-get($title-font-weights, medium);
+			}
+			&-semi-bold {
+				font-weight: map-get($title-font-weights, semi-bold);
+			}
+
+			@each $property, $value in $properties {
+				@if $property != font-weight {
+					#{$property}: $value;
+				}
+			}
+		}
+	}
+}
+
+$text-font-weights: (
+	regular: 400,
+	medium: 500,
+	semi-bold: 600,
+);
+
+$text-styles: (
+	p1: (
+		font-size: 24px,
+		line-height: 140%,
+	),
+	p2: (
+		font-size: 20px,
+		line-height: 140%,
+	),
+	p3: (
+		font-size: 18px,
+		line-height: 160%,
+	),
+	p4: (
+		font-size: 16px,
+		line-height: 160%,
+	),
+	p5: (
+		font-size: 14px,
+		line-height: 160%,
+	),
+	p6: (
+		font-size: 12px,
+		line-height: 160%,
+	),
+	p7: (
+		font-size: 11px,
+		line-height: 160%,
+	),
+);
+
+.text {
+	@each $style, $properties in $text-styles {
+		&-#{$style} {
+			font-feature-settings:
+				"clig" off,
+				"liga" off;
+			font-style: normal;
+			color: currentColor;
+
+			&-regular {
+				font-weight: map-get($text-font-weights, regular);
+			}
+
+			&-medium {
+				font-weight: map-get($text-font-weights, medium);
+			}
+
+			&-semi-bold {
+				font-weight: map-get($text-font-weights, semi-bold);
+			}
+
+			@each $property, $value in $properties {
+				@if $property != font-weight {
+					#{$property}: $value;
+				}
+			}
+		}
+	}
+}
