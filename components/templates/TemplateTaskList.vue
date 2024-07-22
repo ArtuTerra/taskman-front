@@ -1,19 +1,24 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import OrganismsTaskList from "~/components/organisms/organismsTaskList.vue"; // Adjust the import path
+
 export default defineComponent({
-	name: "TemplatesHome",
+	name: "TemplatesTaskList",
+	components: {
+		OrganismsTaskList,
+	},
 });
 </script>
 
 <template>
-	<div class="section">
-		<h1 class="section__title"><p class="section__title__description"></p></h1>
-		<h1 class="section__caption">Hello <span>World</span></h1>
-		<h1 class="section__description">Hello <span>World</span></h1>
-	</div>
+	<OrganismsTaskList />
 </template>
 
 <style scoped lang="scss">
+@mixin color-red {
+	color: red;
+}
+
 .section {
 	padding: 6rem 1rem;
 	&__title {

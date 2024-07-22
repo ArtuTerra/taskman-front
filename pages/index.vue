@@ -5,5 +5,5 @@ definePageMeta({
 </script>
 
 <template>
-	<TemplatesHome />
+	<h1>This is the homepage!</h1>
 </template>

@@ -6,9 +6,9 @@ export default defineComponent({
 </script>
 <template>
 	<main class="content">
-		<OrganismsHeaderNav />
+		<OrganismsDefaultHeader />
 		<slot />
-		<OrganismsFooterSection />
+		<OrganismsDefaultFooter />
 	</main>
 </template>
 <style scoped lang="scss">

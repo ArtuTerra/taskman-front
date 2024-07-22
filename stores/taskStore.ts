@@ -10,10 +10,14 @@ export const useTaskStore = defineStore("taskStore", {
 		}>,
 	}),
 	actions: {
+		// TODO: Fazer API FETCH composable e remover console logs
 		async fetchTasks() {
+			const config = useRuntimeConfig();
 			console.log("Fetching tasks...");
 			try {
-				const response = await fetch("http://127.0.0.1:8000/api/tasks");
+				const response = await fetch(
+					`${config.public.apiBaseUrl}/api/public/tasks`,
+				);
 				const data = await response.json();
 				if (response.status === 200) {
 					console.log("Fetched tasks:", data.tasks);
