@@ -11,7 +11,6 @@ export default defineComponent({
 </script>
 
 <template>
-	// exibindo tarefas em uma lista
 	<OrganismsTaskList />
 </template>
 
