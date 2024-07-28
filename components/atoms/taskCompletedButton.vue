@@ -28,7 +28,7 @@ export default defineComponent({
 	margin: 5px 10px;
 	padding: 5px 10px;
 	max-width: 200px;
-	border: 3px solid var(--auxiliary-color-red-800);
+	border: 3px solid var(--auxiliary-color-blue-800);
 	border-radius: 5px;
 	display: flex;
 	align-items: center;
@@ -55,7 +55,7 @@ h3 {
 .task__list__box__checkbox__container:hover .checkbox__check {
 	width: 32px;
 	height: 32px;
-	background: #ff475425;
+	background: var(--brand-color-primary-600);
 	transition: 0.2s;
 }
 
@@ -66,12 +66,12 @@ h3 {
 }
 
 .checkbox__input:checked + .checkbox__check {
-	background: #dc143c;
+	background: var(--brand-color-primary-900);
 	stroke-dashoffset: 0;
 }
 
 .checkbox__check {
-	border: 0.2rem solid #dc143c;
+	border: 0.2rem solid var(--brand-color-primary-400);
 	stroke: #f9f9f9;
 	stroke-dasharray: 25;
 	stroke-dashoffset: 25;

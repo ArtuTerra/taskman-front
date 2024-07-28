@@ -1,21 +1,16 @@
-<script lang="ts">
-import { defineComponent } from "vue";
+<script>
 import OrganismsTaskList from "~/components/organisms/organismsTaskList.vue";
-
 export default defineComponent({
-	name: "TemplatesTaskList",
+	name: "PageTaskList",
 	components: {
 		OrganismsTaskList,
 	},
+	middleware: ["auth"],
 });
 </script>
 
 <template>
-	<OrganismsTaskList />
+	<body>
+		<OrganismsTaskList />
+	</body>
 </template>
-
-<style scoped lang="scss">
-@mixin color-red {
-	color: red;
-}
-</style>

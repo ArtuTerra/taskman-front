@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
 	app: {
 		head: {
-			title: "Taskman",
+			title: "Taskman - Task Manager App",
 			charset: "utf-8",
 			viewport: "width=device-width, initial-scale=1",
 
@@ -12,7 +12,7 @@ export default defineNuxtConfig({
 				{
 					hid: "description",
 					name: "description",
-					content: "Taskman",
+					content: "Taskmam - Task manager app",
 				},
 				{ name: "format-detection", content: "telephone=no" },
 			],
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
 		},
 	},
 
-	ssr: true,
+	ssr: false,
 	css: ["~/assets/scss/main.scss"],
 
 	vite: {
@@ -35,13 +35,14 @@ export default defineNuxtConfig({
 			preprocessorOptions: {
 				scss: {
 					additionalData:
-						'@use "@/assets/scss/_colors.scss" as *; ' +
-						'@use "@/assets/scss/_reset.scss" as *;',
+						'@use "@/assets/scss/_colors.scss" as *; ' + '@use "@/assets/scss/_reset.scss" as *;',
 				},
 			},
 		},
 	},
-
+	router: {
+		middleware: ["auth"],
+	},
 	modules: [
 		["@pinia/nuxt", { autoImports: ["defineStore"] }],
 		"@nuxtjs/google-fonts",
@@ -67,6 +68,4 @@ export default defineNuxtConfig({
 			},
 		},
 	},
-
-	compatibilityDate: "2024-07-18",
 });

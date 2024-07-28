@@ -19,8 +19,8 @@ export default defineComponent({
 <style scoped lang="scss">
 .task__list__box__title {
 	height: 32px;
+	width: 180px;
 	color: var(--brand-color-primary-900);
-	background-color: var(--auxiliary-color-blue-400);
 	text-overflow: ellipsis;
 
 	display: -webkit-box;
