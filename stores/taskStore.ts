@@ -35,6 +35,18 @@ export const useTaskStore = defineStore("taskStore", {
 				alert(`Error fetching tasks: ${error}`);
 			}
 		},
+		async myTasks() {
+			try {
+				const authStore = useAuthStore();
+				const response = await fetchWrapper.get(
+					`${baseUrl}/api/mytasks`,
+					authStore.user?.access_token,
+				);
+				this.setTasks(response);
+			} catch (error) {
+				alert(`Error fetching tasks: ${error}`);
+			}
+		},
 		async deleteTask(taskId: number) {
 			try {
 				const authStore = useAuthStore();
@@ -70,20 +82,42 @@ export const useTaskStore = defineStore("taskStore", {
 				alert(`Error updating task: ${error}`);
 			}
 		},
+		async completeTask(taskId: number, taskState: boolean) {
+			try {
+				const authStore = useAuthStore();
+				const editedTask = await fetchWrapper.put(
+					`${baseUrl}/api/task/complete/${taskId}`,
+					{ "completed": taskState },
+					authStore.user?.access_token,
+				);
+				this.updateTask(editedTask);
+			} catch (error) {
+				alert(`Error updating task: ${error}`);
+			}
+		},
 		async assignUsersToTask({ taskId, userIds }: { taskId: number; userIds: number[] }) {
 			try {
-				await fetchWrapper.post(`${baseUrl}/api/assign`, {
-					task_id: taskId,
-					user_ids: userIds,
-				});
+				const authStore = useAuthStore();
+				await fetchWrapper.post(
+					`${baseUrl}/api/assign`,
+					{
+						task_id: taskId,
+						user_ids: userIds,
+					},
+					authStore.user?.access_token,
+				);
+				alert("User Added succesfully!");
 			} catch (error) {
 				alert(`Error assigning users to task: ${error}`);
 			}
 		},
 	},
 	getters: {
-		getTaskById: (state) => (id: number) => {
+		getTaskById: (state) => (id: number | string) => {
 			return state.tasks.find((task) => task.id === id);
+		},
+		getTasksByCreator: (state) => (userId: number | string) => {
+			return state.tasks.filter((task) => task.creator_id === userId);
 		},
 	},
 });

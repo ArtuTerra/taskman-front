@@ -1,10 +1,20 @@
 <template>
 	<label class="task__list__box__checkbox__container">
-		<input type="checkbox" :checked="completed" class="checkbox__input" />
+		<input
+			type="checkbox"
+			:checked="completed"
+			class="checkbox__input"
+			@click="$emit('complete-task', taskId, completed)"
+		/>
 		<svg height="28" width="28" class="checkbox__check">
 			<polyline points="20 6 9 17 4 12"></polyline>
 		</svg>
-		<h3 class="checkbox__text">To-do</h3>
+		<div v-if="!completed">
+			<h3 class="checkbox__text">To-do</h3>
+		</div>
+		<div v-else>
+			<h3 class="checkbox__text">Done!</h3>
+		</div>
 	</label>
 </template>
 
@@ -14,12 +24,17 @@ import { defineComponent, type PropType } from "vue";
 export default defineComponent({
 	name: "TaskCompletedButton",
 	props: {
+		taskId: {
+			type: Number as PropType<number>,
+			required: true,
+		},
 		completed: {
 			type: Boolean as PropType<boolean>,
 			required: false,
 			default: false,
 		},
 	},
+	emits: ["complete-task"],
 });
 </script>
 

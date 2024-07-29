@@ -1,6 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import { useAuthStore } from "~/stores/useAuthStore";
+import { defineComponent, ref } from "vue";
 import { useTaskStore } from "~/stores/taskStore";
 import type { TaskAssigns } from "~/types/tasksAssigns";
 import type { UserInfo } from "~/types/users";
@@ -8,7 +7,7 @@ import type { UserInfo } from "~/types/users";
 export default defineComponent({
 	name: "TaskForm",
 	setup() {
-		const authStore = useAuthStore();
+		const taskId = useRoute().params.id;
 		const taskStore = useTaskStore();
 
 		const userFromLocalStorage = localStorage.getItem("user");
@@ -23,29 +22,42 @@ export default defineComponent({
 			assigns: [],
 		});
 
+		if (taskId) {
+			const result = taskStore.getTaskById(Number(taskId));
+			if (result) {
+				newTask.value = result;
+			} else {
+				alert("Task not found!");
+				navigateTo("/tasks");
+			}
+		}
+
 		const createTask = async () => {
 			try {
-				await taskStore.createTask(newTask.value);
-				alert("Task created successfully");
-				newTask.value = {
-					id: 0,
-					title: "",
-					description: "",
-					completed: false,
-					creator: currentUser,
-					assigns: [],
-				};
+				if (taskId) {
+					await taskStore.editTask(newTask.value);
+					alert("Task updated succesfully!");
+					navigateTo("/tasks");
+				} else {
+					await taskStore.createTask(newTask.value);
+					alert("Task created successfully");
+					newTask.value = {
+						id: 0,
+						title: "",
+						description: "",
+						completed: false,
+						creator: currentUser,
+						assigns: [],
+					};
+				}
 			} catch (error) {
 				alert("Task creation failed");
 			}
 		};
 
-		const authUser = computed(() => authStore.authenticated);
-
 		return {
 			newTask,
 			createTask,
-			authUser,
 		};
 	},
 });

@@ -16,12 +16,12 @@ export const useUsersStore = defineStore({
 	}),
 	actions: {
 		async getAllUsers() {
-			if (this.loaded) return Promise.reject;
-
-			const authStore = useAuthStore();
-			const users = await fetchWrapper.get(`${baseUrl}/api/users`, authStore.user?.access_token);
-			this.users = users;
-			this.loaded = true;
+			if (!this.loaded) {
+				this.loaded = true;
+				const authStore = useAuthStore();
+				const users = await fetchWrapper.get(`${baseUrl}/api/users`, authStore.user?.access_token);
+				this.users = users;
+			}
 		},
 	},
 });

@@ -5,6 +5,6 @@ export interface TaskAssigns {
 	title: string;
 	description: string;
 	completed: boolean;
-	creator: UserInfo;
-	assigns: UserInfo[];
+	creator_id: number;
+	assigned_users: UserInfo[];
 }

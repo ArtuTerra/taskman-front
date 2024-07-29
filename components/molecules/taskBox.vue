@@ -6,12 +6,14 @@ import TaskDescription from "~/components/atoms/taskDescription.vue";
 import TaskDivider from "~/components/atoms/taskDivider.vue";
 import TaskDeleteButton from "~/components/atoms/taskDeleteButton.vue";
 import UserAdd from "~/components/molecules/userAdd.vue";
+import TaskEditButton from "~/components/atoms/taskEditButton.vue";
 
 export default defineComponent({
 	name: "TaskBox",
 	components: {
 		TaskTitle,
 		TaskDescription,
+		TaskEditButton,
 		TaskDivider,
 		TaskCompletedButton,
 		TaskDeleteButton,
@@ -36,26 +38,38 @@ export default defineComponent({
 			required: true,
 		},
 	},
-	emits: ["delete-task"],
-	// methods: {
-	// 	recieveEmit(value: string) {
-	// 		useDeleteTask(value);
-	// 		refresh();
-	// 	},
-	// },
+	emits: ["delete-task", "complete-task", "edit-task"],
+	setup() {
+		const taskStore = useTaskStore();
+
+		const handleAssignUsers = ({ taskId, userIds }: { taskId: number; userIds: number[] }) => {
+			taskStore.assignUsersToTask({ taskId, userIds });
+		};
+
+		return {
+			handleAssignUsers,
+		};
+	},
 });
 </script>
 
 <template>
 	<div class="task__list__box">
 		<div class="task__list__box__top">
-			<TaskTitle :title="title" />
+			<TaskTitle :title="title" @click="$emit('delete-task', taskId)" />
 			<TaskDeleteButton :task-id="taskId" @click="$emit('delete-task', taskId)" />
 		</div>
 		<TaskDescription :description="description" />
+		<TaskEditButton :task-id="taskId" @click="$emit('edit-task', taskId)" />
 		<TaskDivider />
-		<UserAdd />
-		<TaskCompletedButton :completed="completed" />
+		<div class="task__list__box__bottom">
+			<TaskCompletedButton
+				:completed="completed"
+				:task-id="taskId"
+				@click.prevent="$emit('complete-task', taskId, completed)"
+			/>
+			<UserAdd :task-id="taskId" @assign-users="handleAssignUsers" />
+		</div>
 	</div>
 </template>
 
@@ -72,6 +86,10 @@ export default defineComponent({
 	&__top {
 		display: flex;
 		flex-direction: row;
+	}
+	&__bottom {
+		display: flex;
+		flex-direction: column;
 	}
 }
 </style>

@@ -1,8 +1,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import { useAuthStore } from "~/stores/useAuthStore";
+import { useTaskStore } from "~/stores/taskStore";
 import TaskBox from "~/components/molecules/taskBox.vue";
-import { fetchWrapper } from "~/composables/fetchWrapper";
 import type { TaskAssigns } from "~/types/tasksAssigns";
 
 export default defineComponent({
@@ -11,19 +11,17 @@ export default defineComponent({
 		TaskBox,
 	},
 	setup() {
+		const taskStore = useTaskStore();
 		const authStore = useAuthStore();
-		const baseUrl = useRuntimeConfig().public.apiBaseUrl;
 		const taskData = ref<TaskAssigns[] | null>(null);
 		const dataReady = ref(false);
 		const status = ref("pending");
 
-		const fetchTasks = async () => {
+		const fetchAllTasks = async () => {
 			try {
-				const response = await fetchWrapper.get(
-					`${baseUrl}/api/tasks/assigns`,
-					authStore.user?.access_token,
-				);
-				taskData.value = response;
+				status.value = "pending";
+				await taskStore.fetchTasks();
+				taskData.value = taskStore.tasks;
 				status.value = "success";
 			} catch (error) {
 				alert(`Error fetching tasks: ${error}`);
@@ -34,26 +32,69 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
-			fetchTasks();
+			fetchAllTasks();
 		});
 
-		const refresh = () => {
-			status.value = "pending";
-			fetchTasks();
+		const showAllTasks = (noalert?: boolean) => {
+			taskData.value = taskStore.tasks;
+			if (!noalert) {
+				alert("Tasks refreshed!");
+			}
 		};
 
-		const recieveEmit = async (value: number) => {
+		const refresh = async (noalert?: boolean) => {
+			await fetchAllTasks();
+			if (!noalert) {
+				alert("Tasks refreshed!");
+			}
+		};
+
+		const myTasks = (noalert?: boolean) => {
+			if (authStore && authStore.user && authStore.user.id) {
+				taskData.value = taskStore.getTasksByCreator(authStore.user.id);
+				if (!noalert) {
+					alert("Tasks refreshed!");
+				}
+			}
+		};
+
+		const deleteEmit = async (value: number) => {
 			try {
-				await fetchWrapper.delete(`${baseUrl}/api/task/${value}`, authStore.user?.access_token);
+				await taskStore.deleteTask(value);
 				alert("Task deleted!");
-				refresh();
+				refresh(true);
+			} catch (error) {
+				alert(`Error deleting task: ${error}`);
+			}
+		};
+
+		const completeEmit = async (value: number, oldState: boolean) => {
+			try {
+				const newState = !oldState;
+				await taskStore.completeTask(value, newState);
+				alert("Task (un)Completed!");
+			} catch (error) {
+				alert(`Error completing task: ${error}`);
+			} finally {
+				refresh(true);
+			}
+		};
+
+		const editEmit = (value: number) => {
+			try {
+				navigateTo(`/edit/${value}`);
+				refresh(true);
 			} catch (error) {
 				alert(`Error deleting task: ${error}`);
 			}
 		};
 
 		return {
-			recieveEmit,
+			showAllTasks,
+			myTasks,
+			completeEmit,
+			deleteEmit,
+			editEmit,
 			dataReady,
 			status,
 			refresh,
@@ -67,8 +108,12 @@ export default defineComponent({
 	<div v-if="status === 'pending' || !dataReady">
 		<p>Loading . . .</p>
 	</div>
-	<div v-else>
-		<button @click="refresh">Refresh Data</button>
+	<div v-else class="main__container">
+		<div class="task__button">
+			<button class="task__button__filter" @click="showAllTasks(true)">All Tasks</button>
+			<button class="task__button__filter" @click="myTasks(true)">My Tasks</button>
+			<button class="task__button__refresh" @click="refresh()">Refresh Data</button>
+		</div>
 		<div v-if="taskData && taskData.length" class="task__list">
 			<TaskBox
 				v-for="task in taskData"
@@ -77,9 +122,11 @@ export default defineComponent({
 				:title="task.title"
 				:description="task.description"
 				:completed="task.completed ? true : false"
-				:creator="task.creator"
-				:assigns="task.assigns"
-				@delete-task="recieveEmit"
+				:creator="task.creator_id"
+				:assigns="task.assigned_users"
+				@delete-task="deleteEmit"
+				@complete-task="completeEmit"
+				@edit-task="editEmit"
 			/>
 		</div>
 		<div v-else>
@@ -89,6 +136,23 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
+.main__container {
+	display: flex;
+	flex-direction: column;
+}
+.task__button {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	&__filter,
+	&__refresh {
+		color: blue;
+		padding: 8px 5px;
+		margin: 0px 3px;
+		border: 4px solid var(--brand-color-primary-700);
+		border-radius: 20px;
+	}
+}
 .task__list {
 	display: flex;
 	flex-direction: row;

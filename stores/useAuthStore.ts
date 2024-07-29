@@ -13,6 +13,13 @@ interface UserToken {
 	access_token: string;
 }
 
+interface UserRegister {
+	name: string;
+	email: string;
+	password: string;
+	password_confirmation: string;
+}
+
 interface AuthState {
 	user: UserToken | null;
 	returnUrl: string | null;
@@ -37,6 +44,20 @@ export const useAuthStore = defineStore("useAuthStore", {
 			localStorage.setItem("user", JSON.stringify(response));
 			this.authenticated = true;
 			this.returnUrl = localStorage.getItem("returnUrl") || "/login";
+			localStorage.removeItem("returnUrl");
+			alert("Login successful!");
+			navigateTo(this.returnUrl, { redirectCode: 200 });
+		},
+
+		async registerUser(user: UserRegister) {
+			const response: UserToken = await fetchWrapper.post(`${baseUrl}/api/register`, {
+				...user,
+			});
+
+			this.user = response;
+			this.authenticated = true;
+			localStorage.setItem("user", JSON.stringify(response));
+			this.returnUrl = localStorage.getItem("returnUrl") || "/tasks";
 			localStorage.removeItem("returnUrl");
 			alert("Login successful!");
 			navigateTo(this.returnUrl, { redirectCode: 200 });

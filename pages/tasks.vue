@@ -5,7 +5,6 @@ export default defineComponent({
 	components: {
 		OrganismsTaskList,
 	},
-	middleware: ["auth"],
 });
 </script>
 

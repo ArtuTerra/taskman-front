@@ -20,26 +20,21 @@ export default defineComponent({
 			}
 		};
 
-		const logoutUser = async () => {
-			try {
-				await authStore.logout();
-			} catch (error) {
-				alert("logout failed");
-			}
-		};
 		const authUser = computed(() => authStore.authenticated);
+		if (authUser) {
+			navigateTo("/");
+		}
 
 		return {
 			user,
 			loginUser,
-			logoutUser,
 			authUser,
 		};
 	},
 });
 </script>
 <template>
-	<form v-if="!authUser" class="container__formulario" @submit.prevent="loginUser">
+	<form class="container__formulario" @submit.prevent="loginUser">
 		<h2 class="formulario__titulo">Login to continue</h2>
 		<div class="formulario__campo">
 			<label class="campo__etiqueta" for="uemail">Email: </label>
@@ -66,9 +61,6 @@ export default defineComponent({
 
 		<button id="loginButton" class="button" type="submit">Login</button>
 	</form>
-	<div v-else>
-		<button id="logoutButton" class="button" @click.prevent="logoutUser()">LOGOUT</button>
-	</div>
 </template>
 
 <style lang="scss">

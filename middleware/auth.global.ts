@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware((to) => {
 	console.log("CHECKING IF UR GOOD");
 	const isLoggedIn = !!localStorage.getItem("user");
 
-	const publicPages = ["/login", "/"];
+	const publicPages = ["/login", "/", "/register"];
 	const authRequired = !publicPages.includes(to.path);
 
 	if (authRequired && !isLoggedIn) {

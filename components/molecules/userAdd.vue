@@ -22,8 +22,14 @@ import { useUsersStore } from "~/stores/usersStore";
 
 export default defineComponent({
 	name: "UserAdd",
+	props: {
+		taskId: {
+			type: Number,
+			required: true,
+		},
+	},
 	emits: ["assign-users"],
-	setup(_, { emit }) {
+	setup(props, { emit }) {
 		const userStore = useUsersStore();
 		const searchQuery = ref("");
 		const selectedUserIds = ref<number[]>([]);
@@ -49,7 +55,7 @@ export default defineComponent({
 				return;
 			}
 
-			emit("assign-users", selectedUserIds.value);
+			emit("assign-users", { taskId: props.taskId, userIds: selectedUserIds.value });
 		};
 
 		onMounted(() => {
