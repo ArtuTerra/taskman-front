@@ -21,7 +21,7 @@ export default defineComponent({
 		};
 
 		const authUser = computed(() => authStore.authenticated);
-		if (authUser) {
+		if (authUser.value === true) {
 			navigateTo("/");
 		}
 
