@@ -189,8 +189,5 @@ export default defineComponent({
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: flex-start;
-	&__box__top {
-		justify-content: space-between;
-	}
 }
 </style>
