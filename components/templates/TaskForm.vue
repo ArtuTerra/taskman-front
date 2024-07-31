@@ -18,8 +18,8 @@ export default defineComponent({
 			title: "",
 			description: "",
 			completed: false,
-			creator: currentUser,
-			assigns: [],
+			creator_id: currentUser.id,
+			assigned_users: [],
 		});
 
 		if (taskId) {
@@ -46,8 +46,8 @@ export default defineComponent({
 						title: "",
 						description: "",
 						completed: false,
-						creator: currentUser,
-						assigns: [],
+						creator_id: currentUser.id,
+						assigned_users: [],
 					};
 				}
 			} catch (error) {
@@ -92,19 +92,16 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-.container__formulario {
-	padding: 10px;
-	border: 2px solid gray;
-	margin: 10px;
-}
 .submit-button {
-	display: inline-block;
-	margin-top: 1rem;
-	padding: 0.5rem 1rem;
+	padding: 0px 10px;
+	width: 100%;
+	height: 40px;
+	border-radius: 0.5rem;
+	font-size: 16px;
+	font-weight: 500;
+	transition: 0.15s ease;
 	background-color: #3b82f6;
 	color: #fff;
-	border: none;
-	border-radius: 0.375rem;
 	cursor: pointer;
 	&:hover {
 		background-color: #2563eb;

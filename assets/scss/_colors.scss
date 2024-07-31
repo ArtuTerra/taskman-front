@@ -1,4 +1,42 @@
 :root {
+	--background-dark: rgb(29, 33, 37);
+	--background-dark-highlight: #a6c5e229;
+	--background-light: #dfe4ff;
+	--background-blue: #022262;
+	--background-darkblue: #1c2b41;
+	--background-darkblue-highlight: #09326c;
+	--text-light: #b6c2cf;
+	--text-light-hover: #9fadbc;
+	--text-lightblue-lightest: #cce0ff;
+	--text-lightblue: #7e98f5;
+	--text-lightblue-selected: #579dff;
+	--text-blue-hover: #0c66e4;
+	--border-dark: #9fadbc29;
+
+	--ds-background-neutral: #a1bdd914;
+	--ds-background-neutral-hovered: #a6c5e229;
+	--ds-background-neutral-pressed: #bfdbf847;
+	--ds-background-neutral-subtle: #00000000;
+	--ds-background-neutral-subtle-hovered: #a1bdd914;
+	--ds-background-neutral-subtle-pressed: #a6c5e229;
+	--ds-background-neutral-bold: #9fadbc;
+	--ds-background-neutral-bold-hovered: #b6c2cf;
+	--ds-background-neutral-bold-pressed: #c7d1db;
+
+	--ds-background-selected: #1c2b41;
+	--ds-background-selected-hovered: #09326c;
+	--ds-background-selected-pressed: #0055cc;
+	--ds-background-selected-bold: #579dff;
+	--ds-background-selected-bold-hovered: #85b8ff;
+	--ds-background-selected-bold-pressed: #cce0ff;
+
+	--ds-background-brand-bold: #579dff;
+	--ds-background-brand-bold-hovered: #85b8ff;
+	--ds-background-brand-bold-pressed: #cce0ff;
+	--ds-background-brand-boldest: #e9f2ff;
+	--ds-background-brand-boldest-hovered: #cce0ff;
+	--ds-background-brand-boldest-pressed: #85b8ff;
+
 	--brand-color-primary-1000: #160b32;
 	--brand-color-primary-900: #2c1664;
 	--brand-color-primary-800: #412097;

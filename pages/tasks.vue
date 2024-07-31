@@ -9,7 +9,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<body>
-		<OrganismsTaskList />
-	</body>
+	<OrganismsTaskList />
 </template>
+
+<style></style>

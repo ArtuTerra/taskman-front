@@ -43,7 +43,7 @@ export const useAuthStore = defineStore("useAuthStore", {
 
 			localStorage.setItem("user", JSON.stringify(response));
 			this.authenticated = true;
-			this.returnUrl = localStorage.getItem("returnUrl") || "/login";
+			this.returnUrl = localStorage.getItem("returnUrl") || "/tasks";
 			localStorage.removeItem("returnUrl");
 			alert("Login successful!");
 			navigateTo(this.returnUrl, { redirectCode: 200 });

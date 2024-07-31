@@ -119,5 +119,8 @@ export const useTaskStore = defineStore("taskStore", {
 		getTasksByCreator: (state) => (userId: number | string) => {
 			return state.tasks.filter((task) => task.creator_id === userId);
 		},
+		getTasksByAssigned: (state) => (userId: number | string) => {
+			return state.tasks.filter((task) => task.assigned_users.some((user) => user.id === userId));
+		},
 	},
 });

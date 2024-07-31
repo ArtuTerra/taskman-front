@@ -34,39 +34,110 @@ export default defineComponent({
 });
 </script>
 <template>
-	<form class="container__formulario" @submit.prevent="loginUser">
-		<h2 class="formulario__titulo">Login to continue</h2>
-		<div class="formulario__campo">
-			<label class="campo__etiqueta" for="uemail">Email: </label>
-			<input
-				v-model="user.email"
-				name="uemail"
-				class="campo__escrita"
-				placeholder="Enter your email"
-				required
-			/>
-		</div>
+	<div class="container">
+		<form class="container__formulario" @submit.prevent="loginUser">
+			<div class="container__formulario__header">
+				<h1 class="container__formulario__header__titulo">Welcome back!</h1>
+				<h4 class="container__formulario__header__subtitulo">We are happy to see you again!</h4>
+			</div>
+			<div class="container__formulario__corpo">
+				<div class="container__formulario__corpo__campo">
+					<label class="campo__etiqueta" for="uemail"><h5>E-MAIL:</h5></label>
+					<input
+						v-model="user.email"
+						name="uemail"
+						class="container__formulario__corpo__campo__input"
+						placeholder="Enter your email"
+						required
+					/>
+				</div>
 
-		<div class="formulario__campo">
-			<label class="campo__etiqueta" for="senha">Password: </label>
-			<input
-				v-model="user.password"
-				type="password"
-				class="campo__input"
-				name="psw"
-				placeholder="Enter password"
-				required
-			/>
-		</div>
-
-		<button id="loginButton" class="button" type="submit">Login</button>
-	</form>
+				<div class="container__formulario__corpo__campo">
+					<label class="campo__etiqueta" for="senha"><h5>PASSWORD:</h5></label>
+					<input
+						v-model="user.password"
+						type="password"
+						class="container__formulario__corpo__campo__input"
+						name="psw"
+						placeholder="Enter password"
+						required
+					/>
+				</div>
+			</div>
+			<button id="loginButton" class="container__formulario__button" type="submit">Login</button>
+		</form>
+	</div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.container {
+	display: flex;
+	justify-content: center;
+}
 .container__formulario {
+	display: flex;
+	flex-direction: column;
+	width: 480px;
+	background-color: var(--background-darkblue);
+	color: var(--text-light);
 	padding: 10px;
-	border: 2px solid gray;
+	border: 2px solid var(--border-dark);
 	margin: 10px;
+
+	&__corpo {
+		margin-top: 20px;
+		&__campo {
+			margin-bottom: 20px;
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			&__input {
+				margin-top: 3px;
+				padding: 6px 10px;
+				font-size: 16px;
+				line-height: 1.25;
+				font-weight: 400;
+			}
+		}
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		width: 100%;
+
+		&__titulo {
+			font-size: 24px;
+			line-height: 1.25;
+			font-weight: 600;
+			margin-bottom: 8px;
+		}
+		&__subtitulo {
+			color: var(--text-light-hover);
+			font-size: 16px;
+			line-height: 1.25;
+			font-weight: 400;
+		}
+	}
+
+	&__button {
+		padding: 0px 10px;
+		width: 100%;
+		height: 40px;
+		border-radius: 0.5rem;
+		font-size: 16px;
+		font-weight: 500;
+		transition-property: background-color, border-color, color;
+		transition-duration: 100ms;
+		transition-timing-function: ease;
+		background: var(--text-blue-hover);
+		color: var(--brand-color-primary-lightest);
+		cursor: pointer;
+	}
+	&__button:hover {
+		background: #0055cc;
+		color: var(--brand-color-primary-200);
+	}
 }
 </style>
