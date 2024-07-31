@@ -56,7 +56,7 @@ export default defineComponent({
 <template>
 	<div class="task__list__box">
 		<div class="task__list__box__top">
-			<TaskTitle :title="title" @click="$emit('delete-task', taskId)" />
+			<TaskTitle :title="title" />
 			<TaskDeleteButton :task-id="taskId" @click="$emit('delete-task', taskId)" />
 		</div>
 		<TaskDescription :description="description" />
