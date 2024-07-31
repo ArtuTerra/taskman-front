@@ -24,7 +24,7 @@ export default defineComponent({
 	text-overflow: ellipsis;
 
 	display: -webkit-box;
-	max-width: 400px;
+	max-width: 85%;
 	line-clamp: 2;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;

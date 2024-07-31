@@ -42,19 +42,28 @@ export default defineComponent({
 			}
 		};
 
-		const refresh = async (noalert?: boolean) => {
-			await fetchAllTasks();
-			if (!noalert) {
-				alert("Tasks refreshed!");
-			}
-		};
-
 		const myTasks = (noalert?: boolean) => {
 			if (authStore && authStore.user && authStore.user.id) {
 				taskData.value = taskStore.getTasksByCreator(authStore.user.id);
 				if (!noalert) {
 					alert("Tasks refreshed!");
 				}
+			}
+		};
+
+		const assignedTasks = (noalert?: boolean) => {
+			if (authStore && authStore.user && authStore.user.id) {
+				taskData.value = taskStore.getTasksByAssigned(authStore.user.id);
+				if (!noalert) {
+					alert("Tasks refreshed!");
+				}
+			}
+		};
+
+		const refresh = async (noalert?: boolean) => {
+			await fetchAllTasks();
+			if (!noalert) {
+				alert("Tasks refreshed!");
 			}
 		};
 
@@ -91,6 +100,7 @@ export default defineComponent({
 
 		return {
 			showAllTasks,
+			assignedTasks,
 			myTasks,
 			completeEmit,
 			deleteEmit,
@@ -110,8 +120,9 @@ export default defineComponent({
 	</div>
 	<div v-else class="main__container">
 		<div class="task__button">
-			<button class="task__button__filter" @click="showAllTasks(true)">All Tasks</button>
-			<button class="task__button__filter" @click="myTasks(true)">My Tasks</button>
+			<button class="task__button__all" @click="showAllTasks(true)">All Tasks</button>
+			<button class="task__button__assigned" @click="assignedTasks(true)">Assigned Tasks</button>
+			<button class="task__button__created" @click="myTasks(true)">My Tasks</button>
 			<button class="task__button__refresh" @click="refresh()">Refresh Data</button>
 		</div>
 		<div v-if="taskData && taskData.length" class="task__list">
@@ -144,19 +155,42 @@ export default defineComponent({
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	&__filter,
+	&__all,
+	&__created,
+	&__assigned,
 	&__refresh {
 		color: blue;
 		padding: 8px 5px;
 		margin: 0px 3px;
 		border: 4px solid var(--brand-color-primary-700);
 		border-radius: 20px;
+		transition: 0.2s;
 	}
 }
+.task__button__assigned:hover {
+	background-color: rgb(176, 255, 255);
+	transition: 0.2s;
+}
+.task__button__all:hover {
+	background-color: rgb(176, 255, 255);
+	transition: 0.2s;
+}
+.task__button__created:hover {
+	background-color: rgb(176, 255, 255);
+	transition: 0.2s;
+}
+.task__button__refresh:hover {
+	background-color: rgb(176, 255, 255);
+	transition: 0.2s;
+}
+
 .task__list {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: flex-start;
+	&__box__top {
+		justify-content: space-between;
+	}
 }
 </style>

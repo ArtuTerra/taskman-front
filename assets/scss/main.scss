@@ -1,13 +1,15 @@
 @import "colors";
 * {
+	font-family: -apple-system, Montserrat, BlinkMacSystemFont, "Segoe UI", "Roboto", "Noto Sans",
+		"Ubuntu", "Droid Sans", "Helvetica Neue", sans-serif;
 	margin: 0;
 	padding: 0;
-	font-family: "Montserrat", sans-serif;
 	box-sizing: border-box;
 	-webkit-font-smoothing: antialiased;
 }
 main {
 	height: 100vh;
+	background-color: var(--background-dark);
 }
 
 .container {

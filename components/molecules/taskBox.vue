@@ -75,17 +75,20 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .task__list__box {
+	background-color: var(--brand-color-primary-200);
 	width: 200px;
-	border: 3px solid blue;
-	border-radius: 10px;
+	border: 3px solid var(--brand-color-primary-200);
+	border-radius: 4px;
 	margin: 10px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	transition: 0.5s;
 	&__top {
+		background-color: var(--brand-color-primary-300);
 		display: flex;
 		flex-direction: row;
+		justify-content: space-between;
 	}
 	&__bottom {
 		display: flex;
