@@ -81,11 +81,7 @@ export default defineComponent({
 	position: relative;
 	width: 20px;
 	height: 20px;
-	border: none;
-	background: none;
-	padding: 0;
 	cursor: pointer;
-	display: flex;
 	align-items: center;
 	justify-content: center;
 

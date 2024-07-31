@@ -18,6 +18,7 @@ export default defineComponent({
 		:id="taskId.toString()"
 		class="task__edit__button"
 		type="button"
+		title="Edit task"
 		@click="$emit('edit-task', taskId)"
 	>
 		<!-- FIRST SVG -->
@@ -43,15 +44,14 @@ export default defineComponent({
 
 	&__1,
 	&__2 {
+		position: absolute;
 		top: 0px;
 		left: 0px;
 		width: 100%;
 		height: 100%;
-		transition: opacity 0.2s;
-	}
-
-	&__2 {
-		position: absolute;
+		transition-property: opacity;
+		transition-duration: 150ms;
+		transition-timing-function: ease;
 	}
 
 	&__1 {

@@ -1,21 +1,32 @@
 <template>
-	<div class="user-add">
-		<div class="input-list-container">
+	<div class="adduser__container">
+		<div class="adduser__container__search">
 			<input
 				v-model="searchQuery"
 				type="text"
 				placeholder="Search for a user..."
-				class="search-input"
+				class="adduser__container__search__input"
 			/>
-			<div class="user-list">
-				<div v-for="user in filteredUsers" :key="user.id" class="user-item">
-					<input v-model="selectedUserIds" class="user-checkbox" type="checkbox" :value="user.id" />
+			<div class="adduser__container__search__list">
+				<div v-for="user in filteredUsers" :key="user.id" class="adduser__container__list__item">
+					<input
+						v-model="selectedUserIds"
+						class="adduser__container__list__item__checkbox"
+						type="checkbox"
+						:value="user.id"
+					/>
 					<label>{{ user.name }}</label>
 				</div>
 			</div>
 		</div>
-		<button type="button" class="submit-button" title="Assign users" @click="handleSelect">
+		<button
+			type="button"
+			class="adduser__container__button"
+			title="Assign users"
+			@click="handleSelect"
+		>
 			<svg
+				class="adduser__container__button__img"
 				fill="#000000"
 				xmlns="http://www.w3.org/2000/svg"
 				xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -117,64 +128,64 @@ export default defineComponent({
 	width: 9.2rem;
 }
 
-.user-add {
+.adduser__container {
 	display: flex;
 	justify-content: space-evenly;
 	position: relative;
-}
 
-.search-input {
-	@include search-input-width;
-	font-size: medium;
-	padding: 0.3rem 0.2rem;
-	margin-right: 0.1rem;
-	border: 1px solid #d1d5db;
+	&__search {
+		&__input {
+			@include search-input-width;
+			font-size: medium;
+			padding: 0.3rem 0.2rem;
+			margin-right: 0.1rem;
+			border: 1px solid #d1d5db;
 
-	&:focus {
-		outline: none;
-		border-color: #3b82f6;
+			&:focus {
+				outline: none;
+				border-color: #3b82f6;
+			}
+		}
+		&__list {
+			background-color: azure;
+			border-bottom: 1px solid #d1d5db;
+			position: absolute;
+			font-size: medium;
+			@include search-input-width;
+			max-height: 100px;
+			overflow-y: auto;
+			z-index: 1;
+
+			&__item {
+				border-left: 1px solid #d1d5db;
+				border-right: 1px solid #d1d5db;
+				line-height: normal;
+				display: flex;
+				align-items: center;
+				&__checkbox {
+					margin: 1px 3px;
+				}
+			}
+		}
 	}
-}
 
-.user-list {
-	background-color: azure;
-	border-bottom: 1px solid #d1d5db;
-	position: absolute;
-	font-size: medium;
-	@include search-input-width;
-	max-height: 100px;
-	overflow-y: auto;
-	z-index: 1;
-}
-
-.user-item {
-	border-left: 1px solid #d1d5db;
-	border-right: 1px solid #d1d5db;
-	line-height: normal;
-	display: flex;
-	align-items: center;
-}
-
-.user-checkbox {
-	margin: 1px 3px;
-}
-
-.submit-button {
-	svg {
-		width: 1rem;
-		height: 1rem;
-	}
-	height: 30px;
-	width: 30px;
-	padding: 0.35rem 0.35rem;
-	background-color: #3b82f6;
-	color: #fff;
-	border-radius: 1rem;
-	animation: none;
-	&:hover {
-		display: inline-block;
-		animation: wiggle 1s;
-		background-color: #2563eb;
+	&__button {
+		svg {
+			width: 1rem;
+			height: 1rem;
+		}
+		height: 30px;
+		width: 30px;
+		padding: 0.35rem 0.35rem;
+		background-color: #3b82f6;
+		color: #fff;
+		border-radius: 1rem;
+		animation: none;
+		&:hover {
+			display: inline-block;
+			animation: wiggle 1s;
+			background-color: #2563eb;
+		}
 	}
 }
 </style>
