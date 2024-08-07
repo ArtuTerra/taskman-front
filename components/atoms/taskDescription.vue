@@ -1,5 +1,5 @@
 <template>
-	<h6 class="task__list__box__description">{{ description }}</h6>
+	<p class="task__list__box__description">{{ description }}</p>
 </template>
 
 <script lang="ts">
@@ -18,12 +18,15 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .task__list__box__description {
-	margin-top: 5px;
+	margin: 5px;
 	height: 130px;
-	max-width: 200;
 	text-wrap: wrap;
-	color: var(--brand-color-primary-400);
+	color: var(--text-light);
 	overflow: hidden;
 	text-overflow: ellipsis;
+	color: var(--text-light-hover);
+	font-size: 0.85rem;
+	line-height: 1.25;
+	font-weight: 400;
 }
 </style>

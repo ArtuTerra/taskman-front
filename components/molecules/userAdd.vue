@@ -25,29 +25,16 @@
 			title="Assign users"
 			@click="handleSelect"
 		>
-			<svg
-				class="adduser__container__button__img"
-				fill="#000000"
-				xmlns="http://www.w3.org/2000/svg"
-				xmlns:xlink="http://www.w3.org/1999/xlink"
-				viewBox="0 0 45.402 45.402"
-				xml:space="preserve"
-			>
-				<g>
-					<path
-						d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141
-		c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27
-		c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435
-		c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"
-					/>
-				</g>
-			</svg>
+			<AtomsTaskAddUserButton color="#FFF" />
 		</button>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
+import { useToastError } from "~/composables/swalMixins";
+import type { UserInfo } from "~/types/users";
+import { useTaskStore } from "~/stores/taskStore";
 import { useUsersStore } from "~/stores/usersStore";
 
 export default defineComponent({
@@ -57,9 +44,18 @@ export default defineComponent({
 			type: Number,
 			required: true,
 		},
+		assignedUsers: {
+			type: Array,
+			default: () => [],
+		},
+		color: {
+			type: String,
+			default: "#000000",
+		},
 	},
 	emits: ["assign-users"],
 	setup(props, { emit }) {
+		const taskStore = useTaskStore();
 		const userStore = useUsersStore();
 		const searchQuery = ref("");
 		const selectedUserIds = ref<number[]>([]);
@@ -67,21 +63,34 @@ export default defineComponent({
 		const searchUsers = async () => {
 			try {
 				await userStore.getAllUsers();
+				const userData = userStore.users;
+				return userData;
 			} catch (error) {
-				alert(`Error fetching users: ${error}`);
+				useToastError.fire({
+					title: "Error while trying to fetch users!",
+				});
 			}
 		};
 
 		const filteredUsers = computed(() => {
 			if (!searchQuery.value.trim()) return [];
-			return userStore.users.filter((user) =>
-				user.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
-			);
+			return userStore.users
+				.filter((user: UserInfo) =>
+					user.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+				)
+				.filter(
+					(user: UserInfo) =>
+						!taskStore.tasks
+							.find((task) => task.id === props.taskId)
+							?.assigned_users?.some((assigned) => assigned.id === user.id),
+				);
 		});
 
 		const handleSelect = () => {
 			if (selectedUserIds.value.length === 0) {
-				alert("Please select at least one user.");
+				useToastError.fire({
+					title: "Please select at least 1 user",
+				});
 				return;
 			}
 
@@ -89,7 +98,8 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
-			searchUsers();
+			const userData = searchUsers();
+			return userData;
 		});
 
 		return {
@@ -124,22 +134,20 @@ export default defineComponent({
 	}
 }
 
-@mixin search-input-width {
-	width: 9.2rem;
-}
-
 .adduser__container {
 	display: flex;
 	justify-content: space-evenly;
 	position: relative;
 
 	&__search {
+		margin-bottom: 10px;
+		flex: 1;
 		&__input {
-			@include search-input-width;
+			width: calc(100% - 2px);
 			font-size: medium;
 			padding: 0.3rem 0.2rem;
-			margin-right: 0.1rem;
-			border: 1px solid #d1d5db;
+			border: 3px solid #d1d5db;
+			border-radius: 0.5rem;
 
 			&:focus {
 				outline: none;
@@ -148,10 +156,9 @@ export default defineComponent({
 		}
 		&__list {
 			background-color: azure;
-			border-bottom: 1px solid #d1d5db;
 			position: absolute;
 			font-size: medium;
-			@include search-input-width;
+			width: calc(100% - 32px);
 			max-height: 100px;
 			overflow-y: auto;
 			z-index: 1;

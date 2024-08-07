@@ -1,6 +1,6 @@
 <template>
-	<div id="app">
-		<TemplatesTaskEdit />
+	<div>
+		<AtomsIconTransition> </AtomsIconTransition>
 	</div>
 </template>
 

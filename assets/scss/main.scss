@@ -1,4 +1,6 @@
 @import "colors";
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 * {
 	font-family: -apple-system, Montserrat, BlinkMacSystemFont, "Segoe UI", "Roboto", "Noto Sans",
 		"Ubuntu", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -6,10 +8,6 @@
 	padding: 0;
 	box-sizing: border-box;
 	-webkit-font-smoothing: antialiased;
-}
-main {
-	height: 100vh;
-	background-color: var(--background-dark);
 }
 
 .container {

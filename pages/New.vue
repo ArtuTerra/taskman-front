@@ -1,5 +1,5 @@
 <template>
-	<div class="body">
+	<div id="app">
 		<TemplatesTaskForm />
 	</div>
 </template>

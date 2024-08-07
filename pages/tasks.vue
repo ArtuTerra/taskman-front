@@ -9,7 +9,9 @@ export default defineComponent({
 </script>
 
 <template>
-	<OrganismsTaskList />
+	<div id="app">
+		<OrganismsTaskList />
+	</div>
 </template>
 
 <style></style>

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
+import { useToastSuccess, useAlert, useToast } from "~/composables/swalMixins";
 import { useAuthStore } from "~/stores/useAuthStore";
 import { useTaskStore } from "~/stores/taskStore";
 import TaskBox from "~/components/molecules/taskBox.vue";
@@ -24,7 +25,6 @@ export default defineComponent({
 				taskData.value = taskStore.tasks;
 				status.value = "success";
 			} catch (error) {
-				alert(`Error fetching tasks: ${error}`);
 				status.value = "error";
 			} finally {
 				dataReady.value = true;
@@ -35,10 +35,21 @@ export default defineComponent({
 			fetchAllTasks();
 		});
 
+		const refresh = async (noalert?: boolean) => {
+			await fetchAllTasks();
+			if (!noalert) {
+				useToastSuccess.fire({
+					title: "Tasks Refreshed successfully",
+				});
+			}
+		};
+
 		const showAllTasks = (noalert?: boolean) => {
 			taskData.value = taskStore.tasks;
 			if (!noalert) {
-				alert("Tasks refreshed!");
+				useToast.fire({
+					title: "Showing all tasks!",
+				});
 			}
 		};
 
@@ -46,7 +57,9 @@ export default defineComponent({
 			if (authStore && authStore.user && authStore.user.id) {
 				taskData.value = taskStore.getTasksByCreator(authStore.user.id);
 				if (!noalert) {
-					alert("Tasks refreshed!");
+					useToast.fire({
+						title: "Showing the tasks you created!",
+					});
 				}
 			}
 		};
@@ -55,46 +68,52 @@ export default defineComponent({
 			if (authStore && authStore.user && authStore.user.id) {
 				taskData.value = taskStore.getTasksByAssigned(authStore.user.id);
 				if (!noalert) {
-					alert("Tasks refreshed!");
+					useToast.fire({
+						title: "Showing tasks assigned to you!",
+					});
 				}
 			}
 		};
 
-		const refresh = async (noalert?: boolean) => {
-			await fetchAllTasks();
-			if (!noalert) {
-				alert("Tasks refreshed!");
-			}
+		const deleteEmit = (taskId: number) => {
+			useAlert
+				.fire({
+					title: "Are you sure?",
+					text: "You won't be able to revert this!",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "#d33",
+					confirmButtonText: "Yes, delete it!",
+				})
+				.then(async (result) => {
+					if (result.isConfirmed) {
+						await taskStore.deleteTask(taskId).then(() => (taskData.value = taskStore.tasks));
+					}
+				});
 		};
 
-		const deleteEmit = async (value: number) => {
-			try {
-				await taskStore.deleteTask(value);
-				alert("Task deleted!");
-				refresh(true);
-			} catch (error) {
-				alert(`Error deleting task: ${error}`);
-			}
-		};
-
-		const completeEmit = async (value: number, oldState: boolean) => {
+		const completeEmit = async (taskId: number, oldState: boolean) => {
 			try {
 				const newState = !oldState;
-				await taskStore.completeTask(value, newState);
-				alert("Task (un)Completed!");
+				await taskStore.completeTask(taskId, newState);
 			} catch (error) {
-				alert(`Error completing task: ${error}`);
-			} finally {
-				refresh(true);
+				useToastError.fire({
+					title: "Error changing task status!",
+					text: "Try again later!",
+				});
 			}
 		};
 
-		const editEmit = (value: number) => {
+		const editEmit = (taskId: number) => {
 			try {
-				navigateTo(`/edit/${value}`);
+				navigateTo(`/edit/${taskId}`);
 				refresh(true);
 			} catch (error) {
-				alert(`Error deleting task: ${error}`);
+				useToastError.fire({
+					title: "Error changing task status!",
+					text: "Try again later!",
+				});
 			}
 		};
 
@@ -120,10 +139,12 @@ export default defineComponent({
 	</div>
 	<div v-else class="main__container">
 		<div class="task__button">
-			<button class="task__button__all" @click="showAllTasks(true)">All Tasks</button>
-			<button class="task__button__assigned" @click="assignedTasks(true)">Assigned Tasks</button>
-			<button class="task__button__created" @click="myTasks(true)">My Tasks</button>
-			<button class="task__button__refresh" @click="refresh()">Refresh Data</button>
+			<button class="task__button__all" @click.prevent="showAllTasks()">All Tasks</button>
+			<button class="task__button__assigned" @click.prevent="assignedTasks()">
+				Assigned Tasks
+			</button>
+			<button class="task__button__created" @click.prevent="myTasks()">My Tasks</button>
+			<button class="task__button__refresh" @click.prevent="refresh()">Refresh Data</button>
 		</div>
 		<div v-if="taskData && taskData.length" class="task__list">
 			<TaskBox
@@ -147,6 +168,12 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
+%bg {
+	background-color: var(--background-dark-highlight);
+	color: var(--text-light-hover);
+	border: 1px solid var(--brand-color-primary-600);
+	transition: 150ms;
+}
 .main__container {
 	display: flex;
 	flex-direction: column;
@@ -155,33 +182,25 @@ export default defineComponent({
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+	padding-top: 0.75rem;
+	gap: 12px;
 	&__all,
 	&__created,
 	&__assigned,
 	&__refresh {
-		color: blue;
+		background-color: var(--ds-background-neutral);
+		color: var(--text-light);
 		padding: 8px 5px;
 		margin: 0px 3px;
-		border: 4px solid var(--brand-color-primary-700);
+		border: 1px solid var(--brand-color-primary-700);
 		border-radius: 20px;
-		transition: 0.2s;
 	}
 }
-.task__button__assigned:hover {
-	background-color: rgb(176, 255, 255);
-	transition: 0.2s;
-}
-.task__button__all:hover {
-	background-color: rgb(176, 255, 255);
-	transition: 0.2s;
-}
-.task__button__created:hover {
-	background-color: rgb(176, 255, 255);
-	transition: 0.2s;
-}
+.task__button__assigned:hover,
+.task__button__all:hover,
+.task__button__created:hover,
 .task__button__refresh:hover {
-	background-color: rgb(176, 255, 255);
-	transition: 0.2s;
+	@extend %bg;
 }
 
 .task__list {
@@ -191,6 +210,10 @@ export default defineComponent({
 	justify-content: flex-start;
 	&__box__top {
 		justify-content: space-between;
+	}
+	margin-bottom: 10px;
+	@media screen and (max-width: 980px) {
+		justify-content: center;
 	}
 }
 </style>

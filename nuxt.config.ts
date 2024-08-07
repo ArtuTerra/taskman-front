@@ -40,9 +40,6 @@ export default defineNuxtConfig({
 			},
 		},
 	},
-	router: {
-		middleware: ["auth"],
-	},
 	modules: [
 		["@pinia/nuxt", { autoImports: ["defineStore"] }],
 		"@nuxtjs/google-fonts",

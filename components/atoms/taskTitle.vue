@@ -18,13 +18,16 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .task__list__box__title {
-	height: 32px;
+	padding: 5px;
+	font-size: 1rem;
+	height: 2.625rem;
 	width: 180px;
-	color: var(--brand-color-primary-900);
+	font-weight: 600;
+	color: var(--text-lightblue-lightest);
 	text-overflow: ellipsis;
 
-	display: -webkit-box;
 	max-width: 85%;
+	display: -webkit-box;
 	line-clamp: 2;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;

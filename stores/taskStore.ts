@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
+import { useToastSuccess, useAlertError, useAlertSuccess } from "~/composables/swalMixins";
 import type { TaskAssigns } from "~/types/tasksAssigns";
+import type { UserInfo } from "~/types/users";
 
 const baseUrl = useRuntimeConfig().public.apiBaseUrl;
 
@@ -23,92 +25,164 @@ export const useTaskStore = defineStore("taskStore", {
 				this.tasks[index] = updatedTask;
 			}
 		},
+		updateAssign(taskId: number, users: UserInfo[]) {
+			const taskIndex = this.tasks.findIndex((task) => task.id === taskId);
+			if (taskIndex !== -1) {
+				this.tasks[taskIndex].assigned_users = users;
+			}
+		},
 		async fetchTasks() {
 			try {
 				const authStore = useAuthStore();
 				const response = await fetchWrapper.get(
 					`${baseUrl}/api/tasks/assigns`,
-					authStore.user?.access_token,
+					authStore.returnToken(),
 				);
 				this.setTasks(response);
 			} catch (error) {
-				alert(`Error fetching tasks: ${error}`);
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while loading your tasks! ${error}`,
+				});
 			}
 		},
-		async myTasks() {
+
+		async fetchTaskById(taskId: number) {
 			try {
 				const authStore = useAuthStore();
 				const response = await fetchWrapper.get(
-					`${baseUrl}/api/mytasks`,
-					authStore.user?.access_token,
+					`${baseUrl}/api/tasks/${taskId}`,
+					authStore.returnToken(),
 				);
-				this.setTasks(response);
+				return response;
 			} catch (error) {
-				alert(`Error fetching tasks: ${error}`);
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while loading your task! ${error}`,
+				});
 			}
 		},
+
 		async deleteTask(taskId: number) {
 			try {
 				const authStore = useAuthStore();
-				await fetchWrapper.delete(`${baseUrl}/api/task/${taskId}`, authStore.user?.access_token);
+				await fetchWrapper.delete(`${baseUrl}/api/tasks/${taskId}`, [], authStore.returnToken());
 				this.removeTask(taskId);
+				useToastSuccess.fire({
+					title: "Success!",
+					text: "Task was successfully deleted!",
+				});
 			} catch (error) {
-				alert(`Error deleting task: error`);
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while deleting your task! ${error}`,
+				});
 			}
 		},
 		async createTask(newTask: TaskAssigns) {
 			try {
 				const authStore = useAuthStore();
 				const createdTask = await fetchWrapper.post(
-					`${baseUrl}/api/newtask`,
+					`${baseUrl}/api/tasks`,
 					newTask,
-					authStore.user?.access_token,
+					authStore.returnToken(),
 				);
 				this.addTask(createdTask);
+				useToastSuccess.fire({
+					title: "Success!",
+					text: "Task was created successfully!",
+				});
 			} catch (error) {
-				alert(`Error creating task: ${error}`);
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while creating your task! ${error}`,
+				});
 			}
 		},
 		async editTask(updatedTask: TaskAssigns) {
 			try {
 				const authStore = useAuthStore();
-				const editedTask = await fetchWrapper.put(
-					`${baseUrl}/api/task/${updatedTask.id}`,
-					updatedTask,
-					authStore.user?.access_token,
+
+				const response = await fetchWrapper.put(
+					`${baseUrl}/api/tasks/${updatedTask.id}`,
+					{ "title": updatedTask.title, "description": updatedTask.description },
+					authStore.returnToken(),
 				);
-				this.updateTask(editedTask);
+
+				if (response.ok) {
+					this.updateTask(updatedTask);
+					useToastSuccess.fire({
+						title: "Success!",
+						text: "Task was updated successfully!",
+					});
+				}
 			} catch (error) {
-				alert(`Error updating task: ${error}`);
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while updating your task! ${error}`,
+				});
 			}
 		},
 		async completeTask(taskId: number, taskState: boolean) {
 			try {
 				const authStore = useAuthStore();
 				const editedTask = await fetchWrapper.put(
-					`${baseUrl}/api/task/complete/${taskId}`,
+					`${baseUrl}/api/tasks/${taskId}`,
 					{ "completed": taskState },
-					authStore.user?.access_token,
+					authStore.returnToken(),
 				);
 				this.updateTask(editedTask);
 			} catch (error) {
-				alert(`Error updating task: ${error}`);
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while changing your task's status! ${error}`,
+				});
 			}
 		},
+
 		async assignUsersToTask({ taskId, userIds }: { taskId: number; userIds: number[] }) {
 			try {
 				const authStore = useAuthStore();
-				await fetchWrapper.post(
-					`${baseUrl}/api/assign`,
+				const response = await fetchWrapper.post(
+					`${baseUrl}/api/tasks/assign/${taskId}`,
 					{
-						task_id: taskId,
 						user_ids: userIds,
 					},
-					authStore.user?.access_token,
+					authStore.returnToken(),
 				);
-				alert("User Added succesfully!");
+				this.updateTask(response);
+				useAlertSuccess.fire({
+					title: "Success!",
+					text: "User was successfully assigned to your task",
+				});
 			} catch (error) {
-				alert(`Error assigning users to task: ${error}`);
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while assigning a user to your task! ${error}`,
+				});
+			}
+		},
+
+		async removeUsersFromTask({ taskId, userIds }: { taskId: number; userIds: number[] }) {
+			try {
+				const authStore = useAuthStore();
+				const response = await fetchWrapper.delete(
+					`${baseUrl}/api/tasks/assign/${taskId}`,
+					{
+						user_ids: userIds,
+					},
+					authStore.returnToken(),
+				);
+				this.updateTask(await response);
+				useAlertSuccess.fire({
+					title: "Success!",
+					text: "User was successfully assigned to your task",
+				});
+			} catch (error) {
+				useAlertError.fire({
+					title: "Oops!",
+					text: `Error occurred while assigning a user to your task! ${error}`,
+				});
 			}
 		},
 	},

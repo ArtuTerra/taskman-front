@@ -17,6 +17,8 @@ logs
 .fleet
 .idea
 settings.json
+.vscode
+styleguide.md
 
 # Local env files
 .env

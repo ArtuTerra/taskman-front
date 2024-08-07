@@ -19,7 +19,7 @@ export const useUsersStore = defineStore({
 			if (!this.loaded) {
 				this.loaded = true;
 				const authStore = useAuthStore();
-				const users = await fetchWrapper.get(`${baseUrl}/api/users`, authStore.user?.access_token);
+				const users = await fetchWrapper.get(`${baseUrl}/api/users`, authStore.returnToken());
 				this.users = users;
 			}
 		},

@@ -14,31 +14,23 @@ Pensado para projetos de freelance de médio-grande porte, com tecnologias escal
 > - Prettier
 > - ESLint
 
-## Setup
+## Setup do boilerplate
 
-Make sure to install the dependencies:
-
-```bash
+```sh
 npm install
+```
 
-## Development Server
+### Compilar ambiente de desenvolvimento
 
-Start the development server on `http://localhost:3000`:
-
-```bash
+```sh
 npm run dev
+```
 
-## Production
+### Compilar ambiente de produção
 
-Build the application for production:
-
-```bash
+```sh
 npm run build
-
-Locally preview production build:
-
-```bash
-npm run preview
+```
 
 ### Formatar com Lint
 
@@ -51,5 +43,3 @@ npm run lint
 ```sh
 npm run format
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

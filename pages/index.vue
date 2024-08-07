@@ -1,11 +1,11 @@
-<script setup lang="ts">
-definePageMeta({
+<script lang="ts">
+export default defineComponent({
 	layout: "default",
 });
 </script>
 
 <template>
-	<body>
+	<div id="app">
 		<h1>This is the home page!</h1>
-	</body>
+	</div>
 </template>
