@@ -40,8 +40,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .task__list__box__checkbox__container {
-	margin: 5px 10px;
-	padding: 5px 10px;
+	color: var(--text-light);
+	padding: 2px;
 	max-width: 200px;
 	border: 3px solid var(--auxiliary-color-blue-800);
 	border-radius: 5px;
@@ -55,21 +55,16 @@ export default defineComponent({
 
 h3 {
 	align-content: center;
-	height: 25px;
+	height: 18px;
 	width: 80px;
-	margin: 5px 10px;
 }
 
 .task__list__box__checkbox__container:hover {
-	font-size: 20px;
-	padding: 2pxx 4px;
 	background: #4754ff25;
 	transition: 0.2s;
 }
 
 .task__list__box__checkbox__container:hover .checkbox__check {
-	width: 32px;
-	height: 32px;
 	background: var(--brand-color-primary-600);
 	transition: 0.2s;
 }

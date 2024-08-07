@@ -23,7 +23,7 @@ export default defineComponent({
 	>
 		<!-- FIRST SVG -->
 		<svg
-			fill="#000000"
+			fill="#ffd7d780"
 			width="800px"
 			height="800px"
 			viewBox="-1.7 0 20.4 20.4"
@@ -46,8 +46,8 @@ export default defineComponent({
 			viewBox="-5 -5 60.00 60.00"
 			enable-background="new 0 0 50 50"
 			xml:space="preserve"
-			fill="#000000"
-			stroke="#000000"
+			fill="#fe5f5f"
+			stroke="#fe5f5f"
 			stroke-width="5"
 		>
 			<g id="SVGRepo_iconCarrier">
@@ -60,7 +60,7 @@ export default defineComponent({
 					x2="14.747"
 					y2="35.254"
 				/>
-				<circle fill="none" stroke="#000000" stroke-linejoin="round" cx="25" cy="25" r="23.668" />
+				<circle fill="none" stroke="#fe5f5f" stroke-linejoin="round" cx="25" cy="25" r="23.668" />
 				<line
 					fill="none"
 					stroke-linecap="round"
@@ -115,8 +115,5 @@ export default defineComponent({
 			opacity: 1;
 		}
 	}
-}
-line {
-	stroke: black;
 }
 </style>

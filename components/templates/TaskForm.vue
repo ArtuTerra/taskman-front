@@ -1,61 +1,46 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useTaskStore } from "~/stores/taskStore";
+import { useAlertError } from "~/composables/swalMixins";
 import type { TaskAssigns } from "~/types/tasksAssigns";
-import type { UserInfo } from "~/types/users";
 
 export default defineComponent({
 	name: "TaskForm",
 	setup() {
-		const taskId = useRoute().params.id;
+		const taskId = Number(useRoute().params.id);
 		const taskStore = useTaskStore();
-
-		const userFromLocalStorage = localStorage.getItem("user");
-		const currentUser: UserInfo = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
 
 		const newTask = ref<TaskAssigns>({
 			id: 0,
 			title: "",
 			description: "",
 			completed: false,
-			creator_id: currentUser.id,
+			creator_id: 0,
 			assigned_users: [],
 		});
 
-		if (taskId) {
-			const result = taskStore.getTaskById(Number(taskId));
-			if (result) {
-				newTask.value = result;
-			} else {
-				alert("Task not found!");
-				navigateTo("/tasks");
-			}
-		}
-
 		const createTask = async () => {
 			try {
-				if (taskId) {
-					await taskStore.editTask(newTask.value);
-					alert("Task updated succesfully!");
-					navigateTo("/tasks");
-				} else {
-					await taskStore.createTask(newTask.value);
-					alert("Task created successfully");
+				await taskStore.createTask(newTask.value).then(() => {
 					newTask.value = {
 						id: 0,
 						title: "",
 						description: "",
 						completed: false,
-						creator_id: currentUser.id,
+						creator_id: 0,
 						assigned_users: [],
 					};
-				}
+				});
 			} catch (error) {
-				alert("Task creation failed");
+				useAlertError.fire({
+					text: "Error occurred while creating your task!",
+					title: `${error}`,
+				});
 			}
 		};
 
 		return {
+			taskId,
 			newTask,
 			createTask,
 		};
@@ -64,47 +49,109 @@ export default defineComponent({
 </script>
 
 <template>
-	<form class="container__formulario" @submit.prevent="createTask">
-		<h2 class="formulario__titulo">Create a Task:</h2>
-		<div class="formulario__campo">
-			<label class="campo__etiqueta" for="title">Task Title</label>
-			<input
-				v-model="newTask.title"
-				name="title"
-				class="campo__escrita"
-				placeholder="Enter the Task Title"
-				required
-			/>
-		</div>
+	<AtomsCenterContainer>
+		<form class="formulario" @submit.prevent="createTask">
+			<div class="formulario__header">
+				<h2 class="formulario__header__titulo">New task!</h2>
+				<h2 class="formulario__header__subtitulo">Create a task here</h2>
+			</div>
+			<div class="formulario__corpo">
+				<div class="formulario__corpo__campo">
+					<label class="formulario__corpo__campo__etiqueta" for="title">Task Title</label>
 
-		<div class="formulario__campo">
-			<label class="campo__etiqueta" for="description">Description</label>
-			<input
-				v-model="newTask.description"
-				name="description"
-				class="campo__escrita"
-				placeholder="Enter the Description"
-			/>
-		</div>
+					<input
+						v-model="newTask.title"
+						name="title"
+						class="formulario__corpo__campo__input"
+						placeholder="Enter the Task Title"
+						required
+					/>
+				</div>
 
-		<button id="submitButton" class="submit-button" type="submit">Submit</button>
-	</form>
+				<div class="formulario__corpo__campo">
+					<label class="formulario__corpo__campo__etiqueta" for="description">Description</label>
+					<textarea
+						v-model="newTask.description"
+						name="description"
+						class="formulario__corpo__campo__description"
+						placeholder="Enter the Description"
+					/>
+				</div>
+			</div>
+			<AtomsSubmitButton>Create!</AtomsSubmitButton>
+		</form>
+	</AtomsCenterContainer>
 </template>
 
-<style lang="scss">
-.submit-button {
-	padding: 0px 10px;
-	width: 100%;
-	height: 40px;
-	border-radius: 0.5rem;
-	font-size: 16px;
-	font-weight: 500;
-	transition: 0.15s ease;
-	background-color: #3b82f6;
-	color: #fff;
-	cursor: pointer;
-	&:hover {
-		background-color: #2563eb;
+<style lang="scss" scoped>
+@mixin smallBold() {
+	font-size: 12px;
+	line-height: 1.33;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+}
+.formulario {
+	display: flex;
+	flex-direction: column;
+	width: 480px;
+	background-color: var(--background-darkblue);
+	color: var(--text-light);
+	padding: 10px;
+	border: 2px solid var(--border-dark);
+	margin: 10px;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		width: 100%;
+
+		&__titulo {
+			font-size: 24px;
+			line-height: 1.25;
+			font-weight: 600;
+			margin-bottom: 8px;
+		}
+		&__subtitulo {
+			color: var(--text-light-hover);
+			font-size: 16px;
+			line-height: 1.25;
+			font-weight: 400;
+		}
+	}
+
+	&__corpo {
+		margin-top: 20px;
+		&__campo {
+			margin-bottom: 20px;
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			&__etiqueta {
+				@include smallBold;
+			}
+			&__input,
+			&__description {
+				border: 3px solid var(--background-darkblue);
+				margin-top: 3px;
+				border-radius: 0.5rem;
+				padding: 6px 10px;
+				font-size: 16px;
+				line-height: 1.25;
+				font-weight: 400;
+				transition: 0.15s;
+				&:focus {
+					outline: none;
+					border: 3px solid var(--ds-background-brand-bold-hovered);
+					transition: 0.15s;
+				}
+			}
+			&__description {
+				height: 6rem;
+				resize: none;
+			}
+		}
 	}
 }
 </style>

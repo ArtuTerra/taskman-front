@@ -13,11 +13,7 @@ export default defineComponent({
 		const authStore = useAuthStore();
 
 		const loginUser = async () => {
-			try {
-				await authStore.login(user.value.email, user.value.password);
-			} catch (error) {
-				alert("login failed");
-			}
+			await authStore.login(user.value.email, user.value.password);
 		};
 
 		const authUser = computed(() => authStore.authenticated);
@@ -34,47 +30,43 @@ export default defineComponent({
 });
 </script>
 <template>
-	<div class="container">
-		<form class="container__formulario" @submit.prevent="loginUser">
-			<div class="container__formulario__header">
-				<h1 class="container__formulario__header__titulo">Welcome back!</h1>
-				<h4 class="container__formulario__header__subtitulo">We are happy to see you again!</h4>
+	<AtomsCenterContainer>
+		<form class="formulario" @submit.prevent="loginUser">
+			<div class="formulario__header">
+				<h1 class="formulario__header__titulo">Welcome back!</h1>
+				<h4 class="formulario__header__subtitulo">We are happy to see you again!</h4>
 			</div>
-			<div class="container__formulario__corpo">
-				<div class="container__formulario__corpo__campo">
-					<label class="campo__etiqueta" for="uemail"><h5>E-MAIL:</h5></label>
+			<div class="formulario__corpo">
+				<div class="formulario__corpo__campo">
+					<label class="formulario__corpo__campo__etiqueta" for="uemail"><h5>E-MAIL:</h5></label>
 					<input
 						v-model="user.email"
 						name="uemail"
-						class="container__formulario__corpo__campo__input"
+						class="formulario__corpo__campo__input"
 						placeholder="Enter your email"
 						required
 					/>
 				</div>
 
-				<div class="container__formulario__corpo__campo">
-					<label class="campo__etiqueta" for="senha"><h5>PASSWORD:</h5></label>
+				<div class="formulario__corpo__campo">
+					<label class="formulario__corpo__campo__etiqueta" for="senha"><h5>PASSWORD:</h5></label>
 					<input
 						v-model="user.password"
 						type="password"
-						class="container__formulario__corpo__campo__input"
+						class="formulario__corpo__campo__input"
 						name="psw"
 						placeholder="Enter password"
 						required
 					/>
 				</div>
 			</div>
-			<button id="loginButton" class="container__formulario__button" type="submit">Login</button>
+			<AtomsSubmitButton>Login</AtomsSubmitButton>
 		</form>
-	</div>
+	</AtomsCenterContainer>
 </template>
 
 <style lang="scss" scoped>
-.container {
-	display: flex;
-	justify-content: center;
-}
-.container__formulario {
+.formulario {
 	display: flex;
 	flex-direction: column;
 	width: 480px;
@@ -91,6 +83,13 @@ export default defineComponent({
 			display: flex;
 			flex-direction: column;
 			flex-grow: 1;
+			&__etiqueta {
+				font-size: 12px;
+				line-height: 1.33;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.02em;
+			}
 			&__input {
 				margin-top: 3px;
 				padding: 6px 10px;

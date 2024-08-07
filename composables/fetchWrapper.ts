@@ -11,10 +11,10 @@ export const fetchWrapper = {
 	get: (url: string, token?: string) => request("GET", url, token),
 	post: (url: string, body?: any, token?: string) => request("POST", url, token, body),
 	put: (url: string, body?: any, token?: string) => request("PUT", url, token, body),
-	delete: (url: string, token?: string) => request("DELETE", url, token),
+	delete: (url: string, body?: any, token?: string) => request("DELETE", url, token, body),
 };
 
-function request(method: Methods, url: string, token?: string, body?: any) {
+async function request(method: Methods, url: string, token?: string, body?: any) {
 	const headers = authHeader(token);
 	const requestOptions: RequestOptions = {
 		method,
@@ -29,7 +29,8 @@ function request(method: Methods, url: string, token?: string, body?: any) {
 		requestOptions.body = JSON.stringify(body);
 	}
 
-	return fetch(url, requestOptions).then(handleResponse);
+	const response = await fetch(url, requestOptions);
+	return handleResponse(response);
 }
 
 function authHeader(token?: string): { [key: string]: string } {
@@ -40,12 +41,16 @@ function authHeader(token?: string): { [key: string]: string } {
 }
 
 async function handleResponse(response: Response): Promise<any> {
+	if (response.status === 204) {
+		return;
+	}
+
 	const data = await response.json();
 
 	if (!response.ok) {
 		const error = (data && data.message) || response.status;
 		if (response.status === 401 && !response.url.endsWith("/logout")) {
-			useAuthStore().logout();
+			useAuthStore().logout(true);
 		}
 		return Promise.reject(error);
 	}

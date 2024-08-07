@@ -15,14 +15,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .footer {
-	position: fixed;
-	left: 0;
-	bottom: 0;
+	font-size: 1.17rem;
 	width: 100%;
 	background-color: rgb(0, 162, 255);
 	color: rgb(0, 17, 255);
 	text-align: center;
 	&__text {
+		max-height: 60px;
 		padding: 20px;
 	}
 }

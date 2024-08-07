@@ -5,109 +5,264 @@ export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
 		const authUser = computed(() => authStore.authenticated);
+		const userName = computed(() => authStore.user?.name);
 
 		const logoutUser = async () => {
-			try {
-				await authStore.logout();
-			} catch (error) {
-				alert("logout failed");
-			}
+			await authStore.logout();
 		};
 
-		return { authUser, logoutUser };
+		const test = ref(true);
+
+		const toggle = () => {
+			test.value = !test.value;
+		};
+
+		const fechar = () => {
+			test.value = false;
+		};
+
+		onMounted(() => {
+			return toggle();
+		});
+
+		return { toggle, fechar, test, authUser, logoutUser, userName };
 	},
 });
 </script>
 
 <template>
-	<div class="header__container">
-		<header>
-			<h2 class="title">Task<span>man</span></h2>
-			<ul v-if="authUser">
-				<li><nuxt-link class="header__container__link" to="/">Home</nuxt-link></li>
-				<div class="header__container__split" />
-				<li><nuxt-link class="header__container__link" to="/tasks">Tasks</nuxt-link></li>
-				<div class="header__container__split" />
-				<li><nuxt-link class="header__container__link" to="/new">New Task</nuxt-link></li>
-				<div class="header__container__split" />
-				<li>
-					<nuxt-link class="header__container__link" to="/login" @click="logoutUser"
-						>Logout</nuxt-link
-					>
-				</li>
-			</ul>
-			<ul v-else>
-				<li><nuxt-link class="header__container__link" to="/login">Login</nuxt-link></li>
-				<div class="header__container__split" />
-				<li><nuxt-link class="header__container__link" to="/register">Register</nuxt-link></li>
-			</ul>
-		</header>
-		<div class="mainContent">
-			<slot />
+	<header class="header">
+		<h2 class="header__title">Task<span>man</span></h2>
+		<button type="button" href="javascript:void(0);" class="header__menu" @click="toggle">
+			Menu
+			<svg height="20" width="20" class="header__menu__icon">
+				<polyline points="16 8 10 14 4 8"></polyline>
+			</svg>
+		</button>
+		<div class="header__left" :class="{ 'responsive': test }" @mouseleave="fechar">
+			<div v-if="authUser" class="header__left__list">
+				<nuxt-link class="header__left__list__link" to="/"> Home </nuxt-link>
+				<nuxt-link class="header__left__list__link" to="/tasks">Tasks</nuxt-link>
+				<nuxt-link class="header__left__list__link" to="/new"> New Task </nuxt-link>
+				<nuxt-link class="header__left__list__link" to="/login" @click="logoutUser">
+					Logout
+				</nuxt-link>
+			</div>
+			<div v-else class="header__left__list" @mouseleave="fechar">
+				<nuxt-link class="header__left__list__link" to="/login">Login</nuxt-link>
+				<nuxt-link class="header__left__list__link" to="/register">Register</nuxt-link>
+			</div>
 		</div>
+		<div class="header__middle" />
+		<div class="header__right">
+			<div v-if="authUser" class="header__right__user">
+				<div class="header__right__user__welcome">Welcome:</div>
+				<span class="header__right__user__name">
+					{{ userName }}
+				</span>
+			</div>
+		</div>
+	</header>
+	<div class="mainContent">
+		<slot />
 	</div>
 </template>
 
 <style lang="scss" scoped>
-header {
-	padding: 0.2rem;
-	background-color: var(--background-dark);
-	border-bottom: 1px solid var(--border-dark);
-	display: flex;
-	align-content: flex-start;
-}
-.title {
-	font-family: "Comfortaa", sans-serif;
-	font-optical-sizing: auto;
-	height: 30px;
-	width: fit-content;
-	background-color: var(--background-light);
-	border: 3px;
-	border-radius: 10px;
-	margin: 5px 2px;
-	padding: 3px 10px;
-	span {
-		padding: 0px 2px;
-		background-color: var(--background-blue);
-		border-radius: 0.5rem 0px 0.5rem 0px;
-		font-family: "Comfortaa", sans-serif;
-		font-optical-sizing: auto;
-		color: #7e98f5;
-	}
-}
-ul {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: space-around;
-}
-li {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-self: center;
-	justify-content: space-around;
-}
-.header__container__link {
+@mixin fontLink {
 	font-size: 14px;
 	font-weight: 500;
 	color: rgb(182, 194, 207);
+}
+@mixin formatLink {
 	margin: 5px 20px;
 	padding: 8px;
 	border-radius: 0.5rem;
-	transition-property: background-color, border-color, color;
-	transition-duration: 100ms;
-	transition-timing-function: ease;
+	&:hover {
+		color: rgb(159, 173, 188);
+		background-color: var(--background-dark-highlight);
+		transition:
+			color 0.2s,
+			background-color 0.2s;
+	}
+	&:active {
+		background-color: var(--ds-background-neutral-pressed);
+		color: var(--ds-background-selected-bold);
+		transition:
+			color 0s,
+			background-color 0s;
+	}
 }
-.header__container__link:hover {
-	color: rgb(159, 173, 188);
-	background-color: #a6c5e229;
+.mainContent {
+	min-height: calc(100vh - 106px);
+	background-color: var(--background-dark);
+}
+.header {
+	height: 46px;
+	padding: 0px 0.5rem;
+	background-color: var(--background-dark);
+	border-bottom: 1px solid var(--border-dark);
+	display: flex;
+	&__title {
+		align-self: center;
+		font-family: "Comfortaa", sans-serif;
+		font-optical-sizing: auto;
+		height: 30px;
+		width: fit-content;
+		background-color: var(--background-light);
+		border: 3px;
+		border-radius: 10px;
+		margin: 2px 5px 2px 10px;
+		padding: 3px 10px;
+		span {
+			padding: 0px 2px;
+			background-color: var(--background-blue);
+			border-radius: 0.5rem 0px 0.5rem 0px;
+			font-family: "Comfortaa", sans-serif;
+			font-optical-sizing: auto;
+			color: #7e98f5;
+		}
+	}
+	&__menu {
+		@include fontLink();
+		@include formatLink();
+		display: none;
+		&__icon {
+			align-self: center;
+			stroke: var(--text-light);
+			stroke-linecap: round;
+			stroke-width: 0.1rem;
+			border-radius: 0.1rem;
+			fill: none;
+			transition:
+				background 0.4s,
+				stroke-dashoffset 0.6s,
+				0.2s;
+		}
+		&:hover &__icon {
+			stroke: var(--text-lightblue);
+			stroke-dasharray: 20;
+			stroke-dashoffset: 40px;
+			transition: 0.2s ease-in;
+		}
+		&:active &__icon {
+			stroke: var(--ds-background-selected-bold);
+			transition: 0.1s;
+		}
+	}
+	&__left {
+		align-self: center;
+		&__list {
+			&__link {
+				@include fontLink();
+				@include formatLink();
+			}
+			&__split {
+				border-left: 2px solid var(--border-dark);
+				width: 1px;
+				height: 15px;
+				align-self: center;
+			}
+		}
+	}
+	&__middle {
+		flex: 1;
+	}
+	&__right {
+		width: fit-content;
+		min-width: 140px;
+		align-content: center;
+		&__user {
+			height: 30px;
+			margin-right: 5px;
+			padding: 2px 10px;
+			background-color: var(--ds-background-neutral-subtle-hovered);
+			border-radius: 0.5rem;
+			&__welcome {
+				color: var(--text-light);
+				font-size: 12px;
+			}
+			&__name {
+				display: block;
+				text-align: center;
+				color: var(--text-lightblue);
+				font-weight: 600;
+				text-wrap: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 20rem;
+			}
+		}
+	}
 }
 
-.header__container__split {
-	border-left: 2px solid var(--border-dark);
-	width: 1px;
-	height: 15px;
-	align-self: center;
+@media only screen and (max-width: 950px) {
+	.header {
+		&__menu {
+			display: flex;
+			align-items: center;
+		}
+		&__middle {
+			flex-grow: 3fr;
+		}
+		&__left {
+			transform: scale(0);
+			display: flex;
+			position: relative;
+			justify-content: space-evenly;
+			left: -60px;
+			transition: 0.2s;
+			&__list {
+				display: flex;
+				flex-direction: column;
+				border-top-left-radius: 20rem;
+				border-top-right-radius: 20rem;
+				border-bottom-right-radius: 0.5rem;
+				border-bottom-left-radius: 0.5rem;
+				background-color: var(--background-blue);
+				position: absolute;
+				font-size: medium;
+				z-index: 0;
+				opacity: 0;
+				transition:
+					opacity 0.3s,
+					padding 0.5s,
+					margin 0.5s;
+				&__link {
+					opacity: 0;
+					font-size: 0px;
+					max-height: 0px;
+					transition:
+						font-size 1s,
+						padding 1s,
+						margin 1s;
+				}
+			}
+
+			&.responsive {
+				transform: scale(1);
+				transition: 0.2s ease-in-out;
+				align-self: self-end;
+				& .header__left__list {
+					border-top-left-radius: 0rem;
+					border-top-right-radius: 0rem;
+					height: fit-content;
+					transition: 0.1s;
+					opacity: 1;
+					max-height: none;
+					& .header__left__list__link {
+						@include formatLink();
+						opacity: 1;
+						font-size: 14px;
+						transition: 0.2s;
+						padding: 1rem 2rem;
+						margin: 0.5rem;
+						max-height: none;
+						background-color: var(--border-dark);
+					}
+				}
+			}
+		}
+	}
 }
 </style>

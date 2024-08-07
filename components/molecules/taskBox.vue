@@ -37,6 +37,10 @@ export default defineComponent({
 			type: Number as PropType<number>,
 			required: true,
 		},
+		assigns: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	emits: ["delete-task", "complete-task", "edit-task"],
 	setup() {
@@ -60,35 +64,47 @@ export default defineComponent({
 			<TaskDeleteButton :task-id="taskId" @click="$emit('delete-task', taskId)" />
 		</div>
 		<TaskDescription :description="description" />
-		<TaskEditButton :task-id="taskId" @click="$emit('edit-task', taskId)" />
-		<TaskDivider />
-		<div class="task__list__box__bottom">
+		<div class="task__list__box__middle">
+			<TaskEditButton :task-id="taskId" @click="$emit('edit-task', taskId)" />
 			<TaskCompletedButton
 				:completed="completed"
 				:task-id="taskId"
 				@click.prevent="$emit('complete-task', taskId, completed)"
 			/>
-			<UserAdd :task-id="taskId" @assign-users="handleAssignUsers" />
+		</div>
+		<div class="task__list__box__bottom">
+			<TaskDivider />
+			<UserAdd :task-id="taskId" :assigned-users="assigns" @assign-users="handleAssignUsers" />
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
 .task__list__box {
-	background-color: var(--brand-color-primary-200);
-	width: 200px;
-	border: 3px solid var(--brand-color-primary-200);
-	border-radius: 4px;
-	margin: 10px;
+	background-color: var(--background-darkblue);
+	width: 300px;
+	border: 2px solid var(--border-dark);
+	border-radius: 0.5rem;
+	padding: 5px;
+	margin: 5px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	transition: 0.5s;
+	flex-grow: 1;
+	max-width: 380px;
+	max-height: 350px;
 	&__top {
-		background-color: var(--brand-color-primary-300);
+		background-color: var(--background-darkblue-highlight);
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+	}
+	&__middle {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
 	}
 	&__bottom {
 		display: flex;

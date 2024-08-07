@@ -3,123 +3,32 @@ import { defineComponent } from "vue";
 export default defineComponent({
 	name: "AtomsTaskAddUserButton",
 	props: {
-		taskId: {
-			type: Number as PropType<number>,
-			required: true,
+		color: {
+			type: String,
+			default: "#000",
 		},
 	},
-	emits: ["add-user"],
 });
 </script>
 
 <template>
-	<button
-		:id="taskId.toString"
-		class="task__delete__button"
-		type="button"
-		@click="$emit('add-user', taskId)"
+	<svg
+		class="adduser__container__button__img"
+		:fill="color"
+		xmlns="http://www.w3.org/2000/svg"
+		xmlns:xlink="http://www.w3.org/1999/xlink"
+		viewBox="0 0 45.402 45.402"
+		xml:space="preserve"
 	>
-		<!-- FIRST SVG -->
-		<svg
-			width="800px"
-			height="800px"
-			viewBox="0 0 32 32"
-			version="1.1"
-			xmlns="http://www.w3.org/2000/svg"
-			xmlns:xlink="http://www.w3.org/1999/xlink"
-			xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
-		>
-			<title>plus-circle</title>
-			<desc>Created with Sketch Beta.</desc>
-			<defs></defs>
-			<g
-				id="Page-1"
-				stroke="none"
-				stroke-width="1"
-				fill="none"
-				fill-rule="evenodd"
-				sketch:type="MSPage"
-			>
-				<g
-					id="Icon-Set-Filled"
-					sketch:type="MSLayerGroup"
-					transform="translate(-466.000000, -1089.000000)"
-					fill="#000000"
-				>
-					<path
-						d="M488,1106 L483,1106 L483,1111 C483,1111.55 482.553,1112 482,1112 C481.447,1112 481,1111.55 481,1111 L481,1106 L476,1106 C475.447,1106 475,1105.55 475,1105 C475,1104.45 475.447,1104 476,1104 L481,1104 L481,1099 C481,1098.45 481.447,1098 482,1098 C482.553,1098 483,1098.45 483,1099 L483,1104 L488,1104 C488.553,1104 489,1104.45 489,1105 C489,1105.55 488.553,1106 488,1106 L488,1106 Z M482,1089 C473.163,1089 466,1096.16 466,1105 C466,1113.84 473.163,1121 482,1121 C490.837,1121 498,1113.84 498,1105 C498,1096.16 490.837,1089 482,1089 L482,1089 Z"
-						id="plus-circle"
-						sketch:type="MSShapeGroup"
-					></path>
-				</g>
-			</g>
-		</svg>
-		<!-- END OF FIRST SVG -->
-
-		<!-- SECOND SVG -->
-		<svg
-			width="800px"
-			height="800px"
-			viewBox="0 0 32 32"
-			version="1.1"
-			xmlns="http://www.w3.org/2000/svg"
-			xmlns:xlink="http://www.w3.org/1999/xlink"
-			xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
-		>
-			<title>plus-circle</title>
-			<desc>Created with Sketch Beta.</desc>
-			<defs></defs>
-			<g
-				id="Page-1"
-				stroke="none"
-				stroke-width="1"
-				fill="none"
-				fill-rule="evenodd"
-				sketch:type="MSPage"
-			>
-				<g
-					id="Icon-Set"
-					sketch:type="MSLayerGroup"
-					transform="translate(-464.000000, -1087.000000)"
-					fill="#000000"
-				>
-					<path
-						d="M480,1117 C472.268,1117 466,1110.73 466,1103 C466,1095.27 472.268,1089 480,1089 C487.732,1089 494,1095.27 494,1103 C494,1110.73 487.732,1117 480,1117 L480,1117 Z M480,1087 C471.163,1087 464,1094.16 464,1103 C464,1111.84 471.163,1119 480,1119 C488.837,1119 496,1111.84 496,1103 C496,1094.16 488.837,1087 480,1087 L480,1087 Z M486,1102 L481,1102 L481,1097 C481,1096.45 480.553,1096 480,1096 C479.447,1096 479,1096.45 479,1097 L479,1102 L474,1102 C473.447,1102 473,1102.45 473,1103 C473,1103.55 473.447,1104 474,1104 L479,1104 L479,1109 C479,1109.55 479.447,1110 480,1110 C480.553,1110 481,1109.55 481,1109 L481,1104 L486,1104 C486.553,1104 487,1103.55 487,1103 C487,1102.45 486.553,1102 486,1102 L486,1102 Z"
-						id="plus-circle"
-						sketch:type="MSShapeGroup"
-					></path>
-				</g>
-			</g>
-		</svg>
-		<!-- END OF SECOND SVG -->
-	</button>
+		<g>
+			<path
+				d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141
+		c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27
+		c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435
+		c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"
+			/>
+		</g>
+	</svg>
 </template>
 
-<style lang="scss">
-.task__delete__button {
-	max-height: 200px;
-	max-width: 200px;
-	&__1 {
-		position: absolute;
-		z-index: 1;
-		opacity: 0;
-		transition: 0.2s;
-	}
-	&__2 {
-		position: absolute;
-		z-index: 100;
-		opacity: 1;
-		transition: 0.2s;
-	}
-}
-.task__delete__button:hover .task__delete__button {
-	&__1 {
-		opacity: 100;
-		transition: 0.2s;
-	}
-	&__2 {
-		opacity: 0;
-		transition: 0.2s;
-	}
-}
-</style>
+<style lang="scss"></style>

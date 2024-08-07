@@ -9,7 +9,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<body>
+	<div id="app">
 		<TemplatesLoginForm />
-	</body>
+	</div>
 </template>

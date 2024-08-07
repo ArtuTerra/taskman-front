@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useToastError } from "~/composables/swalMixins";
 import { useAuthStore } from "~/stores/useAuthStore";
 
 export default defineComponent({
@@ -16,13 +17,12 @@ export default defineComponent({
 
 		const registerUser = async () => {
 			if (user.value.password !== user.value.password_confirmation) {
-				alert("Passwords do not match!");
+				useToastError.fire({
+					title: "Oops!",
+					text: `Passwords do not match!`,
+				});
 			} else {
-				try {
-					await authStore.registerUser(user.value);
-				} catch (error) {
-					alert(`Register failed! ${error}`);
-				}
+				await authStore.registerUser(user.value);
 			}
 		};
 
@@ -37,43 +37,41 @@ export default defineComponent({
 });
 </script>
 <template>
-	<div class="container">
-		<form class="container__formulario" @submit.prevent="registerUser">
-			<div class="container__formulario__header">
-				<h2 class="container__formulario__header__titulo">Register to Taskman</h2>
-				<h4 class="container__formulario__header__subtitulo">
-					Create your account to get started!
-				</h4>
+	<AtomsCenterContainer>
+		<form class="formulario" @submit.prevent="registerUser">
+			<div class="formulario__header">
+				<h2 class="formulario__header__titulo">Register to Taskman</h2>
+				<h4 class="formulario__header__subtitulo">Create your account to get started!</h4>
 			</div>
-			<div class="container__formulario__corpo">
-				<div class="container__formulario__corpo__campo">
+			<div class="formulario__corpo">
+				<div class="formulario__corpo__campo">
 					<label class="campo__etiqueta" for="uname">Name: </label>
 					<input
 						v-model="user.name"
 						name="uname"
-						class="container__formulario__corpo__campo__input"
+						class="formulario__corpo__campo__input"
 						placeholder="Enter your name"
 						required
 					/>
 				</div>
-				<div class="container__formulario__corpo__campo">
+				<div class="formulario__corpo__campo">
 					<label class="campo__etiqueta" for="uemail">Email: </label>
 					<input
 						v-model="user.email"
 						name="uemail"
-						class="container__formulario__corpo__campo__input"
+						class="formulario__corpo__campo__input"
 						placeholder="Enter your email"
 						minlength="8"
 						required
 					/>
 				</div>
 
-				<div class="container__formulario__corpo__campo">
+				<div class="formulario__corpo__campo">
 					<label class="campo__etiqueta" for="senha">Password: </label>
 					<input
 						v-model="user.password"
 						type="password"
-						class="container__formulario__corpo__campo__input"
+						class="formulario__corpo__campo__input"
 						name="psw"
 						placeholder="Enter password"
 						minlength="8"
@@ -81,12 +79,12 @@ export default defineComponent({
 					/>
 				</div>
 
-				<div class="container__formulario__corpo__campo">
+				<div class="formulario__corpo__campo">
 					<label class="campo__etiqueta" for="senha">Password: </label>
 					<input
 						v-model="user.password_confirmation"
 						type="password"
-						class="container__formulario__corpo__campo__input"
+						class="formulario__corpo__campo__input"
 						name="psw"
 						placeholder="Confirm password"
 						minlength="8"
@@ -94,17 +92,13 @@ export default defineComponent({
 					/>
 				</div>
 			</div>
-			<button id="loginButton" class="container__formulario__button" type="submit">Login</button>
+			<button id="loginButton" class="formulario__button" type="submit">Login</button>
 		</form>
-	</div>
+	</AtomsCenterContainer>
 </template>
 
 <style lang="scss" scoped>
-.container {
-	display: flex;
-	justify-content: center;
-}
-.container__formulario {
+.formulario {
 	width: 480px;
 	padding: 10px;
 	margin: 10px;
