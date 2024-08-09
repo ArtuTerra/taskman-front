@@ -2,8 +2,6 @@
 	<input class="clean-input" type="text" value="{{ text }}" />
 </template>
 
-<script lang="ts" setup></script>
-
 <style>
 .clean-input {
 	border-color: var(--border-dark);

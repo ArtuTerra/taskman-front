@@ -1,17 +1,10 @@
 <script>
-import OrganismsTaskList from "~/components/organisms/organismsTaskList.vue";
 export default defineComponent({
 	name: "PageTaskList",
-	components: {
-		OrganismsTaskList,
-	},
+	components: {},
 });
 </script>
 
 <template>
-	<div id="app">
-		<OrganismsTaskList />
-	</div>
+	<TemplatesTemplateTaskList />
 </template>
-
-<style></style>

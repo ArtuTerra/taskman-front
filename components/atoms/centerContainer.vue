@@ -1,10 +1,8 @@
 <template>
 	<div class="container">
-		<slot></slot>
+		<slot />
 	</div>
 </template>
-
-<script lang="ts" setup></script>
 
 <style lang="scss">
 .container {

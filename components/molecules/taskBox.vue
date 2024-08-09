@@ -1,22 +1,16 @@
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
 import TaskCompletedButton from "~/components/atoms/taskCompletedButton.vue";
-import TaskTitle from "~/components/atoms/taskTitle.vue";
-import TaskDescription from "~/components/atoms/taskDescription.vue";
 import TaskDivider from "~/components/atoms/taskDivider.vue";
-import TaskDeleteButton from "~/components/atoms/taskDeleteButton.vue";
 import UserAdd from "~/components/molecules/userAdd.vue";
 import TaskEditButton from "~/components/atoms/taskEditButton.vue";
 
 export default defineComponent({
 	name: "TaskBox",
 	components: {
-		TaskTitle,
-		TaskDescription,
 		TaskEditButton,
 		TaskDivider,
 		TaskCompletedButton,
-		TaskDeleteButton,
 		UserAdd,
 	},
 	props: {
@@ -58,13 +52,19 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="task__list__box">
-		<div class="task__list__box__top">
-			<TaskTitle :title="title" />
-			<TaskDeleteButton :task-id="taskId" @click="$emit('delete-task', taskId)" />
+	<div class="task__box">
+		<div class="task__box__top">
+			<AtomsTaskTitle :text="title" size="small" types="primary" class="task__box__top__title" />
+			<AtomsTaskDeleteButton :task-id="taskId" @click="$emit('delete-task', taskId)" />
 		</div>
-		<TaskDescription :description="description" />
-		<div class="task__list__box__middle">
+		<AtomsTaskTitle
+			:text="description"
+			size="extra-small"
+			types="default"
+			class="task__box__description"
+		/>
+		<TaskDivider />
+		<div class="task__box__middle">
 			<TaskEditButton :task-id="taskId" @click="$emit('edit-task', taskId)" />
 			<TaskCompletedButton
 				:completed="completed"
@@ -72,40 +72,54 @@ export default defineComponent({
 				@click.prevent="$emit('complete-task', taskId, completed)"
 			/>
 		</div>
-		<div class="task__list__box__bottom">
-			<TaskDivider />
+		<div class="task__box__bottom">
 			<UserAdd :task-id="taskId" :assigned-users="assigns" @assign-users="handleAssignUsers" />
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
-.task__list__box {
+@mixin webkit-box($value) {
+	display: -webkit-box;
+	line-clamp: $value;
+	-webkit-line-clamp: $value;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.task__box {
 	background-color: var(--background-darkblue);
-	width: 300px;
 	border: 2px solid var(--border-dark);
 	border-radius: 0.5rem;
-	padding: 5px;
 	margin: 5px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	transition: 0.5s;
-	flex-grow: 1;
-	max-width: 380px;
-	max-height: 350px;
+	padding: 5px;
+
 	&__top {
+		border: 0.5rem solid transparent;
 		background-color: var(--background-darkblue-highlight);
+		border-radius: 0.5rem;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+
+		&__title {
+			@include webkit-box(2);
+			height: 3.9rem;
+			max-width: 85%;
+		}
 	}
+	&__description {
+		@include webkit-box(8);
+		height: 8.5rem;
+	}
+
 	&__middle {
 		display: flex;
-		align-items: flex-end;
+		align-items: center;
 		justify-content: space-between;
-		margin-bottom: 0.5rem;
+		margin: 4px 0px;
 	}
+
 	&__bottom {
 		display: flex;
 		flex-direction: column;

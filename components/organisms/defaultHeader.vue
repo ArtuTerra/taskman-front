@@ -70,13 +70,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @mixin fontLink {
-	font-size: 14px;
+	font-size: 0.875rem;
 	font-weight: 500;
 	color: rgb(182, 194, 207);
 }
 @mixin formatLink {
-	margin: 5px 20px;
-	padding: 8px;
+	margin: 0.3125rem 1.25rem;
+	padding: 0.5rem;
 	border-radius: 0.5rem;
 	&:hover {
 		color: rgb(159, 173, 188);
@@ -98,24 +98,24 @@ export default defineComponent({
 	background-color: var(--background-dark);
 }
 .header {
-	height: 46px;
+	height: 2.875rem;
 	padding: 0px 0.5rem;
 	background-color: var(--background-dark);
 	border-bottom: 1px solid var(--border-dark);
 	display: flex;
 	&__title {
+		font-size: 1.5rem;
 		align-self: center;
 		font-family: "Comfortaa", sans-serif;
 		font-optical-sizing: auto;
-		height: 30px;
+		height: 1.875rem;
 		width: fit-content;
 		background-color: var(--background-light);
-		border: 3px;
-		border-radius: 10px;
-		margin: 2px 5px 2px 10px;
-		padding: 3px 10px;
+		border-radius: 0.5rem;
+		margin: 0.125rem 0.3125rem 0.125rem 0.625rem;
+		padding: 0.1875rem 0.625rem;
 		span {
-			padding: 0px 2px;
+			padding: 0px 0.125rem;
 			background-color: var(--background-blue);
 			border-radius: 0.5rem 0px 0.5rem 0px;
 			font-family: "Comfortaa", sans-serif;
@@ -173,14 +173,14 @@ export default defineComponent({
 		min-width: 140px;
 		align-content: center;
 		&__user {
-			height: 30px;
-			margin-right: 5px;
-			padding: 2px 10px;
+			height: 1.875rem;
+			margin-right: 0.3125rem;
+			padding: 0.125rem 0.625rem;
 			background-color: var(--ds-background-neutral-subtle-hovered);
 			border-radius: 0.5rem;
 			&__welcome {
 				color: var(--text-light);
-				font-size: 12px;
+				font-size: 0.75rem;
 			}
 			&__name {
 				display: block;
@@ -196,21 +196,22 @@ export default defineComponent({
 	}
 }
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 59.375rem) {
 	.header {
 		&__menu {
+			z-index: 1;
 			display: flex;
 			align-items: center;
 		}
 		&__middle {
-			flex-grow: 3fr;
+			flex-grow: 3;
 		}
 		&__left {
 			transform: scale(0);
 			display: flex;
 			position: relative;
 			justify-content: space-evenly;
-			left: -60px;
+			left: -3.75rem;
 			transition: 0.2s;
 			&__list {
 				display: flex;
@@ -253,7 +254,7 @@ export default defineComponent({
 					& .header__left__list__link {
 						@include formatLink();
 						opacity: 1;
-						font-size: 14px;
+						font-size: 0.875rem;
 						transition: 0.2s;
 						padding: 1rem 2rem;
 						margin: 0.5rem;

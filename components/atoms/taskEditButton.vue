@@ -36,8 +36,8 @@ export default defineComponent({
 	position: relative;
 	margin: 5px;
 	padding: 1px;
-	width: 20px;
-	height: 20px;
+	width: 25px;
+	height: 25px;
 	cursor: pointer;
 	align-items: center;
 	justify-content: center;

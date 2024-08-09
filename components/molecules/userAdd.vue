@@ -1,35 +1,3 @@
-<template>
-	<div class="adduser__container">
-		<div class="adduser__container__search">
-			<input
-				v-model="searchQuery"
-				type="text"
-				placeholder="Search for a user..."
-				class="adduser__container__search__input"
-			/>
-			<div class="adduser__container__search__list">
-				<div v-for="user in filteredUsers" :key="user.id" class="adduser__container__list__item">
-					<input
-						v-model="selectedUserIds"
-						class="adduser__container__list__item__checkbox"
-						type="checkbox"
-						:value="user.id"
-					/>
-					<label>{{ user.name }}</label>
-				</div>
-			</div>
-		</div>
-		<button
-			type="button"
-			class="adduser__container__button"
-			title="Assign users"
-			@click="handleSelect"
-		>
-			<AtomsTaskAddUserButton color="#FFF" />
-		</button>
-	</div>
-</template>
-
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
 import { useToastError } from "~/composables/swalMixins";
@@ -111,6 +79,38 @@ export default defineComponent({
 	},
 });
 </script>
+
+<template>
+	<div class="adduser__container">
+		<div class="adduser__container__search">
+			<input
+				v-model="searchQuery"
+				type="text"
+				placeholder="Search for a user..."
+				class="adduser__container__search__input"
+			/>
+			<div class="adduser__container__search__list">
+				<div v-for="user in filteredUsers" :key="user.id" class="adduser__container__list__item">
+					<input
+						v-model="selectedUserIds"
+						class="adduser__container__list__item__checkbox"
+						type="checkbox"
+						:value="user.id"
+					/>
+					<label>{{ user.name }}</label>
+				</div>
+			</div>
+		</div>
+		<button
+			type="button"
+			class="adduser__container__button"
+			title="Assign users"
+			@click="handleSelect"
+		>
+			<AtomsTaskAddUserButton color="#FFF" />
+		</button>
+	</div>
+</template>
 
 <style lang="scss" scoped>
 @keyframes wiggle {

@@ -44,6 +44,7 @@ export default defineComponent({
 						name="uemail"
 						class="formulario__corpo__campo__input"
 						placeholder="Enter your email"
+						type="email"
 						required
 					/>
 				</div>

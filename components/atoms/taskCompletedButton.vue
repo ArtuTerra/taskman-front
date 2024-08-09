@@ -1,23 +1,3 @@
-<template>
-	<label class="task__list__box__checkbox__container">
-		<input
-			type="checkbox"
-			:checked="completed"
-			class="checkbox__input"
-			@click="$emit('complete-task', taskId, completed)"
-		/>
-		<svg height="28" width="28" class="checkbox__check">
-			<polyline points="20 6 9 17 4 12"></polyline>
-		</svg>
-		<div v-if="!completed">
-			<h3 class="checkbox__text">To-do</h3>
-		</div>
-		<div v-else>
-			<h3 class="checkbox__text">Done!</h3>
-		</div>
-	</label>
-</template>
-
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
 
@@ -38,12 +18,32 @@ export default defineComponent({
 });
 </script>
 
+<template>
+	<label class="task__list__box__checkbox__container">
+		<input
+			type="checkbox"
+			:checked="completed"
+			class="checkbox__input"
+			@click="$emit('complete-task', taskId, completed)"
+		/>
+		<svg height="28" width="28" class="checkbox__check">
+			<polyline points="20 6 9 17 4 12"></polyline>
+		</svg>
+		<div v-if="!completed">
+			<h3 class="checkbox__text">To-do</h3>
+		</div>
+		<div v-else>
+			<h3 class="checkbox__text">Done!</h3>
+		</div>
+	</label>
+</template>
+
 <style scoped lang="scss">
 .task__list__box__checkbox__container {
 	color: var(--text-light);
-	padding: 2px;
+	padding: 3px;
 	max-width: 200px;
-	border: 3px solid var(--auxiliary-color-blue-800);
+	border: 2px solid var(--auxiliary-color-blue-800);
 	border-radius: 5px;
 	display: flex;
 	align-items: center;
@@ -60,12 +60,13 @@ h3 {
 }
 
 .task__list__box__checkbox__container:hover {
-	background: #4754ff25;
+	background: var(--background-blue);
 	transition: 0.2s;
 }
 
 .task__list__box__checkbox__container:hover .checkbox__check {
-	background: var(--brand-color-primary-600);
+	border-color: var(--text-lightblue-selected);
+	background: var(--text-blue-hover);
 	transition: 0.2s;
 }
 
@@ -81,7 +82,7 @@ h3 {
 }
 
 .checkbox__check {
-	border: 0.2rem solid var(--brand-color-primary-400);
+	border: 2px solid var(--text-lightblue);
 	stroke: #f9f9f9;
 	stroke-dasharray: 25;
 	stroke-dashoffset: 25;

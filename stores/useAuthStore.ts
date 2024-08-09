@@ -1,6 +1,11 @@
 import { defineStore } from "pinia";
 import { useRuntimeConfig } from "nuxt/app";
-import { useToastSuccess, useAlertError, useAlertSuccess } from "~/composables/swalMixins";
+import {
+	useToastSuccess,
+	useAlertError,
+	useAlertSuccess,
+	useToast,
+} from "~/composables/swalMixins";
 import { fetchWrapper } from "~/composables/fetchWrapper";
 import type { UserInfo } from "~/types/users";
 
@@ -108,7 +113,7 @@ export const useAuthStore = defineStore("useAuthStore", {
 
 		async me() {
 			const response = await fetchWrapper.get(`${baseUrl}/api/me`, this.returnToken());
-			const data: UserInfo = await response.value;
+			const data: UserInfo = await response.user;
 			return data;
 		},
 

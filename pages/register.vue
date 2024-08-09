@@ -1,6 +1,5 @@
 <script>
 import TemplatesRegisterForm from "~/components/templates/TemplatesRegisterForm.vue";
-
 export default defineComponent({
 	name: "PageLogin",
 	components: {
