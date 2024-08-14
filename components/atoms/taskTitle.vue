@@ -1,8 +1,19 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-const SIZE_OPTIONS = ["extra-large", "large", "medium", "small", "extra-small"];
-const TYPE_OPTIONS = ["default", "primary", "dark"];
+const SIZE_OPTIONS = [
+	"extra-large",
+	"large",
+	"medium",
+	"small",
+	"extra-small",
+	"extra-small-skinny",
+	"label",
+];
+
+const TYPE_OPTIONS = ["default", "primary", "light", "label"];
+
+const HOVER_OPTIONS = ["hoverOn", ""];
 
 export default defineComponent({
 	name: "TaskTitle",
@@ -14,12 +25,17 @@ export default defineComponent({
 		},
 		types: {
 			type: String,
-			default: "dark",
+			default: "default",
 			validator: (value: string) => TYPE_OPTIONS.includes(value),
 		},
 		text: {
 			type: String,
 			default: "Title and Paragraph",
+		},
+		hover: {
+			type: String,
+			default: "",
+			validator: (value: string) => HOVER_OPTIONS.includes(value),
 		},
 	},
 	emits: ["onclick"],
@@ -36,7 +52,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<h1 class="type-text" :class="[size, types]" @click="titleOnClick">
+	<h1 class="type-text" :class="[size, types, hover]" @click="titleOnClick">
 		{{ text }}
 	</h1>
 </template>
@@ -76,11 +92,21 @@ export default defineComponent({
 		@include font-size(1rem, 1rem, 600);
 	}
 
+	&.extra-small-skinny {
+		@include font-size(1rem, 1rem, 500);
+	}
+
+	&.label {
+		@include font-size(0.75rem, 1.33rem, 700);
+		text-transform: uppercase;
+		letter-spacing: 0.05rem;
+	}
+
 	&.default {
 		color: var(--text-light);
 
-		&:hover,
-		&:focus {
+		&.hoverOn:hover,
+		&.hoverOn:focus {
 			color: var(--text-light-hover);
 		}
 	}
@@ -88,16 +114,16 @@ export default defineComponent({
 	&.primary {
 		color: var(--text-lightblue);
 
-		&:hover {
+		&.hoverOn:hover {
 			color: var(--text-lightblue-lightest);
 		}
 	}
 
-	&.dark {
-		color: var(--neutral-color-dark-900);
+	&.light {
+		color: var(--neutral-color-light-300);
 
-		&:hover {
-			color: var(--text-blue-hover);
+		&.hoverOn:hover {
+			color: var(--auxiliary-color-blue-300);
 		}
 	}
 }
