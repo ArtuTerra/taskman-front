@@ -1,11 +1,6 @@
 import { defineStore } from "pinia";
 import { useRuntimeConfig } from "nuxt/app";
-import {
-	useToastSuccess,
-	useAlertError,
-	useAlertSuccess,
-	useToast,
-} from "~/composables/swalMixins";
+import * as alerts from "~/composables/swalMixins";
 import { fetchWrapper } from "~/composables/fetchWrapper";
 import type { UserInfo } from "~/types/users";
 
@@ -61,7 +56,7 @@ export const useAuthStore = defineStore("useAuthStore", {
 			return response;
 		},
 
-		async login(email: string, password: string) {
+		async login(email: string, password?: string) {
 			try {
 				const response: UserToken = await fetchWrapper.post(`${baseUrl}/api/login`, {
 					email,
@@ -78,17 +73,39 @@ export const useAuthStore = defineStore("useAuthStore", {
 				this.returnUrl = localStorage.getItem("returnUrl") || "/tasks";
 				localStorage.removeItem("returnUrl");
 
-				useToastSuccess.fire({
+				alerts.useToastSuccess.fire({
 					title: "Login successful!",
 					text: "You are now logged in!",
 				});
 
 				navigateTo(this.returnUrl, { redirectCode: 200 });
-			} catch (error) {
-				useAlertError.fire({
-					title: "Login Failed!",
-					text: `Check your login details and try again!`,
-				});
+			} catch (error: any) {
+				if (error.includes("email")) {
+					alerts.useAlertConfirm
+						.fire({
+							title: `${error}`,
+							text: "Want to register this e-mail?",
+							confirmButtonText: "Yes, create a new account",
+						})
+						.then((result) => {
+							if (result.isConfirmed) {
+								navigateTo("/register");
+							}
+						});
+				} else {
+					if (error.includes("password") && error.includes("required")) {
+						alerts.useToastSuccess.fire({
+							title: "Email found!",
+							text: "Please enter password.",
+						});
+						return true;
+					}
+
+					alerts.useAlertError.fire({
+						title: "Login Failed!",
+						text: `${error}`,
+					});
+				}
 			}
 		},
 
@@ -98,13 +115,13 @@ export const useAuthStore = defineStore("useAuthStore", {
 					...user,
 				});
 
-				useAlertSuccess.fire({
+				alerts.useAlertSuccess.fire({
 					title: "Register Successful!",
 					text: "Account has been created!",
 				});
-				navigateTo(this.returnUrl, { redirectCode: 200 });
+				navigateTo("/login", { redirectCode: 200 });
 			} catch (error) {
-				useAlertError.fire({
+				alerts.useAlertError.fire({
 					title: "Oops!",
 					text: `Error occurred while creating your account! ${error}`,
 				});
@@ -123,7 +140,7 @@ export const useAuthStore = defineStore("useAuthStore", {
 					await fetchWrapper.post(`${baseUrl}/api/logout`, {}, this.returnToken());
 				}
 			} catch (error) {
-				useToast.fire({
+				alerts.useToast.fire({
 					title: "Logging out",
 					text: "Please log in to continue",
 				});
@@ -131,7 +148,7 @@ export const useAuthStore = defineStore("useAuthStore", {
 				this.user = null;
 				this.authenticated = false;
 				localStorage.clear();
-				useToastSuccess.fire({
+				alerts.useToastSuccess.fire({
 					title: "Logout successful!",
 					text: "See you soon!",
 				});
