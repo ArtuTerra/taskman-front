@@ -13,24 +13,29 @@ export const useTaskStore = defineStore("taskStore", {
 		setTasks(newTasks: TaskAssigns[]) {
 			this.tasks = newTasks;
 		},
+
 		addTask(task: TaskAssigns) {
 			this.tasks.push(task);
 		},
+
 		removeTask(taskId: number) {
 			this.tasks = this.tasks.filter((task) => task.id !== taskId);
 		},
+
 		updateTask(updatedTask: TaskAssigns) {
 			const index = this.tasks.findIndex((task) => task.id === updatedTask.id);
 			if (index !== -1) {
 				this.tasks[index] = updatedTask;
 			}
 		},
+
 		updateAssign(taskId: number, users: UserInfo[]) {
 			const taskIndex = this.tasks.findIndex((task) => task.id === taskId);
 			if (taskIndex !== -1) {
 				this.tasks[taskIndex].assigned_users = users;
 			}
 		},
+
 		async fetchTasks() {
 			try {
 				const authStore = useAuthStore();
@@ -42,7 +47,7 @@ export const useTaskStore = defineStore("taskStore", {
 			} catch (error) {
 				useAlertError.fire({
 					title: "Oops!",
-					text: `Error occurred while loading your tasks! ${error}`,
+					text: `Error occurred while loading all tasks! ${error}`,
 				});
 			}
 		},
@@ -63,7 +68,7 @@ export const useTaskStore = defineStore("taskStore", {
 			}
 		},
 
-		async deleteTask(taskId: number) {
+		async fetchDeleteTask(taskId: number) {
 			try {
 				const authStore = useAuthStore();
 				await fetchWrapper.delete(`${baseUrl}/api/tasks/${taskId}`, [], authStore.returnToken());
@@ -79,7 +84,8 @@ export const useTaskStore = defineStore("taskStore", {
 				});
 			}
 		},
-		async createTask(newTask: TaskAssigns) {
+
+		async fetchCreateTask(newTask: TaskAssigns) {
 			try {
 				const authStore = useAuthStore();
 				const createdTask = await fetchWrapper.post(
@@ -99,13 +105,16 @@ export const useTaskStore = defineStore("taskStore", {
 				});
 			}
 		},
-		async editTask(updatedTask: TaskAssigns) {
+
+		async fetchEditTask(updatedTask: TaskAssigns) {
 			try {
 				const authStore = useAuthStore();
-
 				const response = await fetchWrapper.put(
 					`${baseUrl}/api/tasks/${updatedTask.id}`,
-					{ "title": updatedTask.title, "description": updatedTask.description },
+					{
+						"title": updatedTask.title,
+						"description": updatedTask.description,
+					},
 					authStore.returnToken(),
 				);
 
@@ -123,7 +132,8 @@ export const useTaskStore = defineStore("taskStore", {
 				});
 			}
 		},
-		async completeTask(taskId: number, taskState: boolean) {
+
+		async fetchCompleteTask(taskId: number, taskState: boolean) {
 			try {
 				const authStore = useAuthStore();
 				const editedTask = await fetchWrapper.put(
@@ -140,7 +150,7 @@ export const useTaskStore = defineStore("taskStore", {
 			}
 		},
 
-		async assignUsersToTask({ taskId, userIds }: { taskId: number; userIds: number[] }) {
+		async fetchAssignUsersToTask({ taskId, userIds }: { taskId: number; userIds: number[] }) {
 			try {
 				const authStore = useAuthStore();
 				const response = await fetchWrapper.post(
@@ -163,7 +173,7 @@ export const useTaskStore = defineStore("taskStore", {
 			}
 		},
 
-		async removeUsersFromTask({ taskId, userIds }: { taskId: number; userIds: number[] }) {
+		async fetchRemoveUsersFromTask({ taskId, userIds }: { taskId: number; userIds: number[] }) {
 			try {
 				const authStore = useAuthStore();
 				const response = await fetchWrapper.delete(
@@ -176,23 +186,26 @@ export const useTaskStore = defineStore("taskStore", {
 				this.updateTask(await response);
 				useAlertSuccess.fire({
 					title: "Success!",
-					text: "User was successfully assigned to your task",
+					text: "User was successfully removed from the task",
 				});
 			} catch (error) {
 				useAlertError.fire({
 					title: "Oops!",
-					text: `Error occurred while assigning a user to your task! ${error}`,
+					text: `Error occurred while removing the user from the task! ${error}`,
 				});
 			}
 		},
 	},
+
 	getters: {
 		getTaskById: (state) => (id: number | string) => {
 			return state.tasks.find((task) => task.id === id);
 		},
+
 		getTasksByCreator: (state) => (userId: number | string) => {
 			return state.tasks.filter((task) => task.creator_id === userId);
 		},
+
 		getTasksByAssigned: (state) => (userId: number | string) => {
 			return state.tasks.filter((task) => task.assigned_users.some((user) => user.id === userId));
 		},
