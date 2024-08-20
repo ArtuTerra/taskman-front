@@ -23,7 +23,6 @@ const props = withDefaults(
 
 const icon = ref<string | Record<string, any>>("");
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let hasStroke = false;
 
 async function getIcon() {
@@ -65,24 +64,32 @@ watchSyncEffect(() => {
 	if (props.height) {
 		icon.value = icon.value.replace(/ height=".*?"/g, ` height="${props.height}"`);
 	}
+
+	if (hasStroke) {
+		icon.value = icon.value.replace(/ stroke=".*?"/g, ` stroke="${props.currentColor}"`);
+	}
 });
 </script>
 
 <template>
-	<span v-html="icon"></span>
+	<span class="icon-common" :class="{ 'icon-common--stroke': hasStroke }" v-html="icon" />
 </template>
 
-<style>
+<style lang="scss">
 .icon-common {
 	display: flex;
 	background: none;
+	width: v-bind(width);
+	height: v-bind(height);
 	svg {
 		margin-bottom: 0;
 		vertical-align: middle;
 	}
 
 	&.icon-common--stroke {
-		stroke: currentColor !important;
+		& svg {
+			stroke: currentColor !important;
+		}
 	}
 }
 </style>
