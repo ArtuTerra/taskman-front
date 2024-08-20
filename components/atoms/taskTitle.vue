@@ -69,7 +69,7 @@ export default defineComponent({
 	height: auto;
 	display: flex;
 	text-align: left;
-	padding: 5px;
+	padding: 0.3125rem;
 	transition: color 0.2s;
 
 	&.extra-large {
@@ -100,6 +100,7 @@ export default defineComponent({
 		@include font-size(0.75rem, 1.33rem, 700);
 		text-transform: uppercase;
 		letter-spacing: 0.05rem;
+		padding: 0;
 	}
 
 	&.default {
