@@ -66,3 +66,13 @@ export const useAlert = Swal.mixin({
 	background: "#1c2b41",
 	color: "#b6c2cf",
 });
+
+export const useAlertConfirm = Swal.mixin({
+	background: "#1c2b41",
+	color: "#b6c2cf",
+	icon: "warning",
+	iconColor: "yellow",
+	showCancelButton: true,
+	confirmButtonColor: "#3085d6",
+	cancelButtonColor: "#d33",
+});

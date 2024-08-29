@@ -11,40 +11,66 @@ export default defineComponent({
 			await authStore.logout();
 		};
 
-		const test = ref(true);
+		const responsive = ref(true);
+		const toggled = ref(false);
 
 		const toggle = () => {
-			test.value = !test.value;
+			toggled.value = true;
+			responsive.value = !responsive.value;
 		};
 
 		const fechar = () => {
-			test.value = false;
+			responsive.value = false;
 		};
+
+		const handleResize = () => {
+			toggled.value = false;
+		};
+
+		onMounted(() => {
+			window.addEventListener("resize", handleResize);
+		});
+
+		onBeforeUnmount(() => {
+			window.removeEventListener("resize", handleResize);
+		});
 
 		onMounted(() => {
 			return toggle();
 		});
 
-		return { toggle, fechar, test, authUser, logoutUser, userName };
+		return {
+			toggled,
+			toggle,
+			fechar,
+			responsive,
+			authUser,
+			logoutUser,
+			userName,
+		};
 	},
 });
 </script>
 
 <template>
 	<header class="header">
-		<h2 class="header__title">Task<span>man</span></h2>
+		<AtomsTaskmanLogo />
 		<button type="button" href="javascript:void(0);" class="header__menu" @click="toggle">
 			Menu
 			<svg height="20" width="20" class="header__menu__icon">
 				<polyline points="16 8 10 14 4 8"></polyline>
 			</svg>
 		</button>
-		<div class="header__left" :class="{ 'responsive': test }" @mouseleave="fechar">
+		<div
+			class="header__left"
+			:class="{ 'responsive': responsive, 'no-transition': !toggled }"
+			@mouseleave="fechar"
+		>
 			<div v-if="authUser" class="header__left__list">
 				<nuxt-link class="header__left__list__link" to="/"> Home </nuxt-link>
 				<nuxt-link class="header__left__list__link" to="/tasks">Tasks</nuxt-link>
 				<nuxt-link class="header__left__list__link" to="/new"> New Task </nuxt-link>
-				<nuxt-link class="header__left__list__link" to="/login" @click="logoutUser">
+				<nuxt-link class="header__left__list__link" to="/login" @click.prevent="logoutUser">
 					Logout
 				</nuxt-link>
 			</div>
@@ -70,16 +96,16 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @mixin fontLink {
-	font-size: 14px;
+	font-size: 0.875rem;
 	font-weight: 500;
-	color: rgb(182, 194, 207);
+	color: #b6c2cf;
 }
 @mixin formatLink {
-	margin: 5px 20px;
-	padding: 8px;
+	margin: 0.3125rem 1.25rem;
+	padding: 0.5rem;
 	border-radius: 0.5rem;
 	&:hover {
-		color: rgb(159, 173, 188);
+		color: #9fadbc;
 		background-color: var(--background-dark-highlight);
 		transition:
 			color 0.2s,
@@ -94,39 +120,22 @@ export default defineComponent({
 	}
 }
 .mainContent {
-	min-height: calc(100vh - 106px);
+	padding-bottom: 2rem;
+	min-height: calc(100vh - 6.625rem);
 	background-color: var(--background-dark);
 }
 .header {
-	height: 46px;
+	height: 2.875rem;
 	padding: 0px 0.5rem;
 	background-color: var(--background-dark);
 	border-bottom: 1px solid var(--border-dark);
 	display: flex;
-	&__title {
-		align-self: center;
-		font-family: "Comfortaa", sans-serif;
-		font-optical-sizing: auto;
-		height: 30px;
-		width: fit-content;
-		background-color: var(--background-light);
-		border: 3px;
-		border-radius: 10px;
-		margin: 2px 5px 2px 10px;
-		padding: 3px 10px;
-		span {
-			padding: 0px 2px;
-			background-color: var(--background-blue);
-			border-radius: 0.5rem 0px 0.5rem 0px;
-			font-family: "Comfortaa", sans-serif;
-			font-optical-sizing: auto;
-			color: #7e98f5;
-		}
-	}
+
 	&__menu {
 		@include fontLink();
 		@include formatLink();
 		display: none;
+
 		&__icon {
 			align-self: center;
 			stroke: var(--text-light);
@@ -139,24 +148,29 @@ export default defineComponent({
 				stroke-dashoffset 0.6s,
 				0.2s;
 		}
+
 		&:hover &__icon {
 			stroke: var(--text-lightblue);
 			stroke-dasharray: 20;
 			stroke-dashoffset: 40px;
 			transition: 0.2s ease-in;
 		}
+
 		&:active &__icon {
 			stroke: var(--ds-background-selected-bold);
 			transition: 0.1s;
 		}
 	}
+
 	&__left {
 		align-self: center;
+
 		&__list {
 			&__link {
 				@include fontLink();
 				@include formatLink();
 			}
+
 			&__split {
 				border-left: 2px solid var(--border-dark);
 				width: 1px;
@@ -165,23 +179,28 @@ export default defineComponent({
 			}
 		}
 	}
+
 	&__middle {
 		flex: 1;
 	}
+
 	&__right {
 		width: fit-content;
 		min-width: 140px;
 		align-content: center;
+
 		&__user {
-			height: 30px;
-			margin-right: 5px;
-			padding: 2px 10px;
+			height: 1.875rem;
+			margin-right: 0.3125rem;
+			padding: 0.125rem 0.625rem;
 			background-color: var(--ds-background-neutral-subtle-hovered);
 			border-radius: 0.5rem;
+
 			&__welcome {
 				color: var(--text-light);
-				font-size: 12px;
+				font-size: 0.75rem;
 			}
+
 			&__name {
 				display: block;
 				text-align: center;
@@ -196,22 +215,27 @@ export default defineComponent({
 	}
 }
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 59.375rem) {
 	.header {
 		&__menu {
+			z-index: 2;
 			display: flex;
 			align-items: center;
 		}
+
 		&__middle {
-			flex-grow: 3fr;
+			flex-grow: 3;
 		}
+
 		&__left {
 			transform: scale(0);
 			display: flex;
 			position: relative;
+			z-index: 1;
 			justify-content: space-evenly;
-			left: -60px;
+			left: -3.75rem;
 			transition: 0.2s;
+
 			&__list {
 				display: flex;
 				flex-direction: column;
@@ -219,16 +243,18 @@ export default defineComponent({
 				border-top-right-radius: 20rem;
 				border-bottom-right-radius: 0.5rem;
 				border-bottom-left-radius: 0.5rem;
-				background-color: var(--background-blue);
+				background-color: var(--background-darkblue);
 				position: absolute;
 				font-size: medium;
-				z-index: 0;
 				opacity: 0;
 				transition:
 					opacity 0.3s,
 					padding 0.5s,
 					margin 0.5s;
+
 				&__link {
+					text-align: center;
+					text-wrap: nowrap;
 					opacity: 0;
 					font-size: 0px;
 					max-height: 0px;
@@ -243,6 +269,7 @@ export default defineComponent({
 				transform: scale(1);
 				transition: 0.2s ease-in-out;
 				align-self: self-end;
+
 				& .header__left__list {
 					border-top-left-radius: 0rem;
 					border-top-right-radius: 0rem;
@@ -250,16 +277,25 @@ export default defineComponent({
 					transition: 0.1s;
 					opacity: 1;
 					max-height: none;
+
 					& .header__left__list__link {
 						@include formatLink();
 						opacity: 1;
-						font-size: 14px;
+						font-size: 0.875rem;
 						transition: 0.2s;
 						padding: 1rem 2rem;
 						margin: 0.5rem;
 						max-height: none;
 						background-color: var(--border-dark);
 					}
+				}
+			}
+			&.no-transition {
+				transition: none;
+
+				& .header__left__list,
+				& .header__left__list__link {
+					transition: none;
 				}
 			}
 		}

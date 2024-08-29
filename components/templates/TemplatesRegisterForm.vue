@@ -40,12 +40,22 @@ export default defineComponent({
 	<AtomsCenterContainer>
 		<form class="formulario" @submit.prevent="registerUser">
 			<div class="formulario__header">
-				<h2 class="formulario__header__titulo">Register to Taskman</h2>
-				<h4 class="formulario__header__subtitulo">Create your account to get started!</h4>
+				<AtomsTaskTitle
+					size="medium"
+					type="light"
+					text="Register to Taskman"
+					style="text-align: center"
+				/>
+				<AtomsTaskTitle
+					size="extra-small-skinny"
+					type="default"
+					text="Create your account to get started!"
+					style="text-align: center"
+				/>
 			</div>
 			<div class="formulario__corpo">
 				<div class="formulario__corpo__campo">
-					<label class="campo__etiqueta" for="uname">Name: </label>
+					<AtomsTaskTitle size="label" type="label" text="name:" />
 					<input
 						v-model="user.name"
 						name="uname"
@@ -55,7 +65,7 @@ export default defineComponent({
 					/>
 				</div>
 				<div class="formulario__corpo__campo">
-					<label class="campo__etiqueta" for="uemail">Email: </label>
+					<AtomsTaskTitle size="label" type="label" text="e-mail:" />
 					<input
 						v-model="user.email"
 						name="uemail"
@@ -67,7 +77,7 @@ export default defineComponent({
 				</div>
 
 				<div class="formulario__corpo__campo">
-					<label class="campo__etiqueta" for="senha">Password: </label>
+					<AtomsTaskTitle size="label" type="label" text="password:" />
 					<input
 						v-model="user.password"
 						type="password"
@@ -80,7 +90,7 @@ export default defineComponent({
 				</div>
 
 				<div class="formulario__corpo__campo">
-					<label class="campo__etiqueta" for="senha">Password: </label>
+					<AtomsTaskTitle size="label" type="label" text="confirm password:" />
 					<input
 						v-model="user.password_confirmation"
 						type="password"
@@ -92,7 +102,13 @@ export default defineComponent({
 					/>
 				</div>
 			</div>
-			<button id="loginButton" class="formulario__button" type="submit">Login</button>
+			<MoleculesButton
+				size="large"
+				types="blue"
+				text-size="small"
+				text-type="light"
+				text="Register"
+			/>
 		</form>
 	</AtomsCenterContainer>
 </template>

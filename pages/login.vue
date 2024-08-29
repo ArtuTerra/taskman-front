@@ -1,5 +1,5 @@
 <script>
-import TemplatesLoginForm from "~/components/templates/LoginForm.vue"; // Adjust the import path
+import TemplatesLoginForm from "~/components/templates/LoginForm.vue";
 export default defineComponent({
 	name: "PageLogin",
 	components: {

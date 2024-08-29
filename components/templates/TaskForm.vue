@@ -21,7 +21,7 @@ export default defineComponent({
 
 		const createTask = async () => {
 			try {
-				await taskStore.createTask(newTask.value).then(() => {
+				await taskStore.fetchCreateTask(newTask.value).then(() => {
 					newTask.value = {
 						id: 0,
 						title: "",
@@ -57,8 +57,7 @@ export default defineComponent({
 			</div>
 			<div class="formulario__corpo">
 				<div class="formulario__corpo__campo">
-					<label class="formulario__corpo__campo__etiqueta" for="title">Task Title</label>
-
+					<AtomsTaskTitle size="label" type="label" text="Task Title:" />
 					<input
 						v-model="newTask.title"
 						name="title"
@@ -67,9 +66,8 @@ export default defineComponent({
 						required
 					/>
 				</div>
-
 				<div class="formulario__corpo__campo">
-					<label class="formulario__corpo__campo__etiqueta" for="description">Description</label>
+					<AtomsTaskTitle size="label" type="label" text="Description:" />
 					<textarea
 						v-model="newTask.description"
 						name="description"
@@ -78,7 +76,14 @@ export default defineComponent({
 					/>
 				</div>
 			</div>
-			<AtomsSubmitButton>Create!</AtomsSubmitButton>
+			<MoleculesButton
+				type="submit"
+				size="large"
+				types="blue"
+				text-size="small"
+				text-type="light"
+				text="Create!"
+			/>
 		</form>
 	</AtomsCenterContainer>
 </template>

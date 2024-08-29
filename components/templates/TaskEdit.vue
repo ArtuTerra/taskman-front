@@ -5,7 +5,7 @@ import { useAlertSuccess, useAlertError, useToastError } from "~/composables/swa
 import type { TaskAssigns } from "~/types/tasksAssigns";
 
 export default defineComponent({
-	name: "TaskForm",
+	name: "TaskEdit",
 	setup() {
 		const taskId = Number(useRoute().params.id);
 		const taskStore = useTaskStore();
@@ -20,14 +20,14 @@ export default defineComponent({
 			assigned_users: [],
 		});
 
-		const fetchTasks = async () => {
+		const callFetchTasks = async () => {
 			if (taskId) {
 				const result = taskStore.getTaskById(Number(taskId));
 				if (result) {
 					newTask.value = result;
 				} else {
-					taskStore.fetchTasks();
-					const fetchedTask = await taskStore.getTaskById(Number(taskId));
+					await taskStore.fetchTasks();
+					const fetchedTask = taskStore.getTaskById(Number(taskId));
 					if (fetchedTask) {
 						newTask.value = fetchedTask;
 						taskStore.fetchTasks();
@@ -42,12 +42,12 @@ export default defineComponent({
 		};
 
 		onMounted(async () => {
-			await fetchTasks();
+			await callFetchTasks();
 		});
 
 		const editTask = async () => {
 			try {
-				await taskStore.editTask(newTask.value);
+				await taskStore.fetchEditTask(newTask.value);
 				useAlertSuccess.fire({
 					title: "Success!",
 					text: "Task edited successfully!",
@@ -73,22 +73,25 @@ export default defineComponent({
 			taskId: number;
 			userIds: number[];
 		}) => {
-			await taskStore.assignUsersToTask({ taskId, userIds });
-			await fetchTasks();
+			await taskStore.fetchAssignUsersToTask({ taskId, userIds });
+			await callFetchTasks();
 		};
 
-		const handleRemoveAssignUsers = async (taskId: number, userIds: number[]) => {
+		const handleRemoveUsers = async (taskId: number, userIds: number[]) => {
 			if (userIds.length === 0) {
 				useToastError.fire({
 					title: "Please select at least 1 user",
 				});
 				return;
 			}
-			await taskStore.removeUsersFromTask({ taskId, userIds }).then(async () => await fetchTasks());
+			await taskStore
+				.fetchRemoveUsersFromTask({ taskId, userIds })
+				.then(async () => await callFetchTasks());
+			removingUserIds.value = [];
 		};
 
 		return {
-			handleRemoveAssignUsers,
+			handleRemoveUsers,
 			handleAssignUsers,
 			assignedUsers,
 			taskId,
@@ -108,8 +111,7 @@ export default defineComponent({
 			</div>
 			<div class="formulario__corpo">
 				<div class="formulario__corpo__campo">
-					<label class="formulario__corpo__campo__etiqueta" for="title">Task Title</label>
-
+					<AtomsTaskTitle size="label" type="label" text="Task Title:" />
 					<input
 						v-model="newTask.title"
 						name="title"
@@ -120,7 +122,7 @@ export default defineComponent({
 				</div>
 
 				<div class="formulario__corpo__campo">
-					<label class="formulario__corpo__campo__etiqueta" for="description">Description</label>
+					<AtomsTaskTitle size="label" type="label" text="Description:" />
 					<textarea
 						v-model="newTask.description"
 						name="description"
@@ -129,15 +131,14 @@ export default defineComponent({
 					/>
 				</div>
 
-				<div class="formulario__corpo__assigns">
-					<label class="formulario__corpo__assigns__titulo">Assigned users:</label>
-					<div v-if="!assignedUsers.length"><p class="assigns-vazio">No assigned users!</p></div>
+				<div v-if="assignedUsers.length" class="formulario__corpo__assigns">
+					<AtomsTaskTitle size="label" type="label" text="Assigned users:" />
 					<div
 						v-for="user in assignedUsers"
 						:key="user.id"
 						class="formulario__corpo__assigns__list"
 					>
-						<label class="formulario__corpo__assigns__list__name">{{ user.name }}</label>
+						<AtomsTaskTitle size="extra-small" type="default" :text="user.name" />
 						<input
 							v-model="removingUserIds"
 							class="formulario__corpo__assigns__list__checkbox"
@@ -145,18 +146,33 @@ export default defineComponent({
 							:value="user.id"
 						/>
 					</div>
-					<button type="button" @click="handleRemoveAssignUsers(taskId, removingUserIds)">
-						REMOVE
-					</button>
+					<MoleculesButton
+						:disabled="!!!removingUserIds.length"
+						type="button"
+						:class="{ 'fade': !removingUserIds.length, 'reveal': removingUserIds.length }"
+						size="medium"
+						types="purple"
+						text-size="extra-small"
+						text-type="light"
+						text="Remove Assigned User(s)"
+						@click="handleRemoveUsers(taskId, removingUserIds)"
+					/>
 				</div>
-				<div class="formulario__corpo__campo__etiqueta">Add User:</div>
-				<MoleculesUserAdd
+				<AtomsTaskTitle size="label" type="label" text="Add User(s):" />
+				<OrganismsUserAdd
 					:task-id="taskId"
 					:assigned-users="newTask.assigned_users"
 					@assign-users="handleAssignUsers"
 				/>
 			</div>
-			<AtomsSubmitButton>Create!</AtomsSubmitButton>
+			<AtomsTaskDivider />
+			<MoleculesButton
+				size="large"
+				types="blue"
+				text-size="small"
+				text-type="light"
+				text="Edit task"
+			/>
 		</form>
 	</AtomsCenterContainer>
 </template>
@@ -168,6 +184,15 @@ export default defineComponent({
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.02em;
+}
+.task__divider {
+	margin: 10px 0px;
+}
+.fade {
+	opacity: 50%;
+}
+.reveal {
+	opacity: 100%;
 }
 .assigns-vazio {
 	@include smallBold();

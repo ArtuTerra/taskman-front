@@ -15,12 +15,22 @@ export const useUsersStore = defineStore({
 		loaded: false,
 	}),
 	actions: {
-		async getAllUsers() {
+		async fetchAllUsers() {
 			if (!this.loaded) {
 				this.loaded = true;
 				const authStore = useAuthStore();
 				const users = await fetchWrapper.get(`${baseUrl}/api/users`, authStore.returnToken());
 				this.users = users;
+			}
+		},
+	},
+	getters: {
+		getUserNameById: (state) => (id: number | string) => {
+			const name = state.users.find((user) => user.id === id)?.name;
+			if (name !== undefined) {
+				return name;
+			} else {
+				return "";
 			}
 		},
 	},

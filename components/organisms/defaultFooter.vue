@@ -17,12 +17,12 @@ export default defineComponent({
 .footer {
 	font-size: 1.17rem;
 	width: 100%;
-	background-color: rgb(0, 162, 255);
-	color: rgb(0, 17, 255);
+	background-color: var(--background-blue);
+	color: var(--text-blue-saturated);
 	text-align: center;
 	&__text {
-		max-height: 60px;
-		padding: 20px;
+		max-height: 3.75rem;
+		padding: 1.25rem;
 	}
 }
 </style>
